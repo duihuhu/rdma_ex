@@ -210,7 +210,7 @@ int init_ib()
 	}
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
-	res.mr = ibv_reg_mr(res.pd, (void *)res.ib_buf, res.ib_buf_size, mflags);
+	res.mr = ibv_reg_mr(res.pd, res.ib_buf, res.ib_buf_size, mflags);
 	if (!res.mr) {
 		fprintf(stdout, "alloc mr failed\n");
 		goto init_ib_exit;
