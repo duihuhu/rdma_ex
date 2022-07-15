@@ -52,7 +52,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, " -o, --op-type (default type send/recv)");
 }
 
-void init_config(int argc, char *argv[])
+int init_config(int argc, char *argv[])
 {
 	while (1)
 	{
@@ -87,7 +87,7 @@ void init_config(int argc, char *argv[])
 			break;
 		default:
 			usage(argv[0]);
-			return;
+			return -1;
 		}
 	}
 	/* parse the last parameter (if exists) as the server name */
@@ -102,4 +102,5 @@ void init_config(int argc, char *argv[])
 		return -1;
 	}
 	fprintf(stdout, "output config %u,%s,%d,%d,%s,%s\n",cfg.tcp_port,cfg.dev_name, cfg.msg_size, cfg.threads, cfg.server_name, cfg.op_type);
+	return 0;
 }
