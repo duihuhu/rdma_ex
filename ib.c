@@ -50,7 +50,7 @@ int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 			.qp_state = IBV_QPS_INIT,
 			.pkey_index = 0,
 			.port_num = IB_PORT,
-			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE  | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE ,
+			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE  | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC,
 		};
 		if (ibv_modify_qp(res.qp, &attr, IBV_QP_STATE | IBV_QP_PKEY_INDEX | IBV_QP_PORT | IBV_QP_ACCESS_FLAGS))
 		{
@@ -102,12 +102,12 @@ int ck_cs_wire() {
 	strcpy(buf, SYNC_MES);
 	ret = sock_write(res.sockfd, (char *)buf, sizeof(SYNC_MES));
 	if (ret < 0) {
-		fprintf(stdout,"failed to write sync");
+		fprintf(stdout,"failed to write sync\n");
 		return -1;
 	}
 	ret = sock_read(res.sockfd, (char *)buf, sizeof(SYNC_MES));
 	if (ret < 0) {
-		fprintf(stdout, "failed to read sync");
+		fprintf(stdout, "failed to read sync\n");
 		return -1;
 	}
 	fprintf(stdout, "%s ck_cs_wire\n", buf);
@@ -158,7 +158,7 @@ int ex_qp_info()
 	}
 	ret = ck_cs_wire();
 	if (ret < 0) {
-		fprintf(stdout, "server-client is not ready");
+		fprintf(stdout, "server-client is not ready\n");
 		return -1;
 	}
 	return 0;
@@ -240,7 +240,7 @@ int init_ib()
 		fprintf(stdout, "failed create qp\n");
 		goto init_ib_exit;
 	}
-	fprintf(stdout, "QP created , QP number=0x%x", res.qp->qp_num);
+	fprintf(stdout, "QP created , QP number=0x%x\n", res.qp->qp_num);
 	int ret;
 	ret = ibv_query_port(res.ctx, IB_PORT, &res.port_attr);
 	if (ret) {
