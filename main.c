@@ -87,7 +87,7 @@ int init_config(int argc, char *argv[])
 			{.name = "port", .has_arg = 1, .val = 'p'},
 			{.name = "ib-dev", .has_arg = 1, .val = 'd'},
 			{.name = "msg-size", .has_arg = 1, .val = 's'},
-			{.name = "threads", .has_arg = 1, .val = 'c'},
+			{.name = "num_threads", .has_arg = 1, .val = 'c'},
 			{.name = "op-type", .has_arg = 1, .val = 'o'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
@@ -106,7 +106,7 @@ int init_config(int argc, char *argv[])
 			cfg.msg_size = strtoul(optarg, NULL, 0);
 			break;
 		case 't':
-			cfg.threads = strtoul(optarg, NULL, 0);
+			cfg.num_threads = strtoul(optarg, NULL, 0);
 			break;
 		case 'o':
 			cfg.op_type = strdup(optarg);
@@ -127,6 +127,6 @@ int init_config(int argc, char *argv[])
 		usage(argv[0]);
 		return -1;
 	}
-	fprintf(stdout, "output config %u,%s,%d,%d,%s,%s\n",cfg.tcp_port,cfg.dev_name, cfg.msg_size, cfg.threads, cfg.server_name, cfg.op_type);
+	fprintf(stdout, "output config %u,%s,%d,%d,%s,%s\n",cfg.tcp_port,cfg.dev_name, cfg.msg_size, cfg.num_threads, cfg.server_name, cfg.op_type);
 	return 0;
 }
