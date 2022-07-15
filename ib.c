@@ -43,7 +43,7 @@ int set_qp_info(int sockfd, struct QpInfo *qp_info)
 }
 
 
-int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
+int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 {
 	{
 		struct ibv_qp_attr attr = {
@@ -151,7 +151,7 @@ int ex_qp_info(struct Resource *res)
 	res->raddr = remote_info.raddr;
 	fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res->mr->rkey, res->ib_buf, res->rkey, res->raddr);
 	
-	ret = conv_qp_status(res->qp, remote_info.qp_num, remote_info.lid);
+	ret = conv_qp_status(res, res->qp, remote_info.qp_num, remote_info.lid);
 	if (ret < 0) {
 		fprintf(stdout, "failed to convert qp status \n");
 		return -1;
