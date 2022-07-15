@@ -281,7 +281,7 @@ init_ib_exit:
 }
 
 
-static int poll_completion()
+int poll_completion()
 {
 	struct ibv_wc wc;
 	unsigned long start_time_msec;
@@ -324,7 +324,7 @@ static int poll_completion()
 	return rc;
 }
 
-static int post_send(int opcode)
+int post_send(int opcode)
 {
 	struct ibv_send_wr sr;
 	struct ibv_sge sge;
