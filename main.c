@@ -42,7 +42,6 @@ int main(int argc, char *argv[]){
 		};
 
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
-		
 		if (cfg.server_name) {
 			ck_cs_wire();
 			/* read contens of server's buffer */
@@ -65,7 +64,20 @@ int main(int argc, char *argv[]){
 		}
 
 	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
-		return 0;
+		if (cfg.server_name) {
+			memset(res.ib_buf, 'W', res.ib_buf_size);
+			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			if (post_send(IBV_WR_RDMA_WRITE))
+			{
+				fprintf(stderr, "failed to post SR 3\n");
+				return -1;
+			}
+			if (poll_completion())
+			{
+				fprintf(stderr, "poll completion failed 3\n");
+				return -1;
+			}
+		}
 	}
 
 	return 0;
