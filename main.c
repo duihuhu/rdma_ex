@@ -24,8 +24,14 @@ struct Config cfg = {
 void init_config();
 int main(int argc, char *argv[]){
 	int ret = 0;
-	init_config(argc, argv);
+	ret = init_config(argc, argv);
+	if (ret == -1){
+		fprintf(stdout, "re init config \n");
+		return 0;
+	}
+
 	ret = init_ib();
+
 	if (ret == -1) {
 		fprintf(stdout,"init ib devices failed");
 	}
@@ -93,7 +99,7 @@ void init_config(int argc, char *argv[])
 	else if (optind < argc)
 	{
 		usage(argv[0]);
-		return;
+		return -1;
 	}
 	fprintf(stdout, "output config %u,%s,%d,%d,%s,%s\n",cfg.tcp_port,cfg.dev_name, cfg.msg_size, cfg.threads, cfg.server_name, cfg.op_type);
 }
