@@ -174,7 +174,7 @@ int init_ib(struct Resource *res)
 	struct ibv_device	**ibv_devices = NULL;
 	struct ibv_device	*ib_dev = NULL;
 	int num_devices;
-	memset(&res, 0, sizeof(struct Resource));
+	resource_init(res);
 	ibv_devices = ibv_get_device_list(&num_devices);
 	if (!num_devices) {
 		fprintf(stdout, "no device\n");
