@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
-			ck_cs_wire();
+			ck_cs_wire(&res);
 			/* read contens of server's buffer */
 			if (post_send(&res, IBV_WR_RDMA_READ))
 			{
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 		} else {
 			strcpy(res.ib_buf, "R");
 			fprintf(stdout, "res buf %s\n", res.ib_buf);
-			ck_cs_wire();
+			ck_cs_wire(&res);
 		}
 
 	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
