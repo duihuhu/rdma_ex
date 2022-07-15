@@ -12,6 +12,10 @@
 #define IB_SL		0
 #define IB_MTU		IBV_MTU_4096
 #define SYNC_MES	"sync"
+#define IB_OP_SR	"SR"
+#define IB_OP_RD	"READ"
+#define IB_OP_WR	"WRITE"
+#define IB_OP_CAS	"CAS"
 struct Resource {
 	struct	ibv_context	*ctx;
 	struct	ibv_pd	*pd;

@@ -35,6 +35,34 @@ int main(int argc, char *argv[]){
 	if (ret == -1) {
 		fprintf(stdout,"init ib devices failed\n");
 	}
+
+	if (cfg.op_type == IB_OP_SR) {
+		if (!cfg.server_name) {
+			continue;
+		};
+
+	} else if (cfg.op_type == IB_OP_RD) {
+		if (cfg.server_name) {
+			/* read contens of server's buffer */
+			if (post_send(&res, IBV_WR_RDMA_READ))
+			{
+				fprintf(stderr, "failed to post SR 2\n");
+				rc = 1;
+				goto main_exit;
+			}
+			if (poll_completion(&res))
+			{
+				fprintf(stderr, "poll completion failed 2\n");
+				rc = 1;
+				goto main_exit;
+			}
+			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
+		}
+
+	} else if (cfg.op_type == IB_OP_WR) {
+
+	}
+
 	return 0;
 }
 
@@ -48,7 +76,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, " -p, --port <port> listen on/connect to port <port> default 7000\n");
 	fprintf(stdout, " -d, --ib-dev <dev> use IB device <dev> (default first device found)\n");
 	fprintf(stdout, " -s, --msg-size  (default 1 alloc numbers of page)\n");
-	fprintf(stdout, " -t, --threads (defulat 1)\n");
+	fprintf(stdout, " -t, --num_threads (defulat 1)\n");
 	fprintf(stdout, " -o, --op-type (default type send/recv)\n");
 }
 
