@@ -11,6 +11,7 @@
 #define	IB_PORT		1
 #define IB_SL		0
 #define IB_MTU		IBV_MTU_4096
+#define MAX_POLL_CQ_TIMEOUT 2000
 #define SYNC_MES	"sync"
 #define IB_OP_SR	"SR"
 #define IB_OP_RD	"READ"

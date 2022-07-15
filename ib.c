@@ -6,6 +6,7 @@
  ************************************************************************/
 #include <malloc.h>
 #include <arpa/inet.h>
+#include <sys/time.h>
 #include "ib.h"
 #include "config.h"
 #include "sock.h"
