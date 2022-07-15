@@ -18,6 +18,7 @@ struct Config cfg = {
 	7000, /* tcp_port */
 	1, 	/*size */
 	1,  /*threads */
+	NULL, /* op type */
 };
 
 void init_config();
@@ -42,6 +43,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, " -d, --ib-dev <dev> use IB device <dev> (default first device found)\n");
 	fprintf(stdout, " -s, --msg-size  (default 1 alloc numbers of page)\n");
 	fprintf(stdout, " -t, --threads (defulat 1)\n");
+	fprintf(stdout, " -o, --op-type (default type send/recv)")
 }
 
 void init_config(int argc, char *argv[])
@@ -54,6 +56,7 @@ void init_config(int argc, char *argv[])
 			{.name = "ib-dev", .has_arg = 1, .val = 'd'},
 			{.name = "msg-size", .has_arg = 1, .val = 's'},
 			{.name = "threads", .has_arg = 1, .val = 'c'},
+			{.name = "op-type", .has_arg = 1, .val = 'o'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
 		c = getopt_long(argc, argv, "p:d:s:t:", long_options, NULL);
@@ -73,6 +76,9 @@ void init_config(int argc, char *argv[])
 		case 't':
 			cfg.threads = strtoul(optarg, NULL, 0);
 			break;
+		case 'o':
+			cfg.op_type = strdup(optarg);
+			break;
 		default:
 			usage(argv[0]);
 			return;
@@ -89,5 +95,5 @@ void init_config(int argc, char *argv[])
 		usage(argv[0]);
 		return;
 	}
-	fprintf(stdout, "output config %u,%s,%d,%d,%s\n",cfg.tcp_port,cfg.dev_name, cfg.msg_size, cfg.threads, cfg.server_name);
+	fprintf(stdout, "output config %u,%s,%d,%d,%s,%s\n",cfg.tcp_port,cfg.dev_name, cfg.msg_size, cfg.threads, cfg.server_name, cfg.op_type);
 }

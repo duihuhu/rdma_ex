@@ -14,6 +14,7 @@ struct Config {
 	uint32_t	tcp_port;
 	int		msg_size;
 	int		threads;
+	char	*op_type;
 };
 extern struct Config cfg;
 
