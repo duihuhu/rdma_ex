@@ -213,7 +213,7 @@ int init_ib()
 		goto init_ib_exit;
 	}
 	memset(res.ib_buf, 'T', res.ib_buf_size);
-	fprintf(stdout, "res buf %s", res.ib_buf);
+	fprintf(stdout, "res buf %s\n", res.ib_buf);
 	int rc;
 	rc = ibv_query_device(res.ctx, &res.dev_attr);
 	if (rc) {
@@ -245,7 +245,7 @@ int init_ib()
 		fprintf(stdout, "query port info failed\n");
 		return -1;
 	}
-	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
+	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", (uintptr_t)res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
 	if (!cfg.server_name) {
 		ret = socket_connect(NULL, cfg.tcp_port);
 		if (ret < 0) {

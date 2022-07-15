@@ -34,7 +34,7 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 	int sockfd = -1;
 	char port[10];
 	if (sprintf(port, "%d", tcp_port)<0) {
-		fprintf(stdout, "port cast failed");
+		fprintf(stdout, "port cast failed\n");
 		return -1;
 	}
 	ret = getaddrinfo(server_name, port, &hints, &addr_res);
@@ -92,7 +92,6 @@ int sock_read(int sockfd, void *buffer, int len)
 		l_bytes -= r_bytes;
 		buf += r_bytes;
 	}
-	fprintf(stdout, "%s buf", buf);
 	return 0;
 }
 
