@@ -61,6 +61,8 @@ int main(int argc, char *argv[]){
 			memset(res.ib_buf, 'T', res.ib_buf_size);
 			fprintf(stdout, "res buf %s\n", res.ib_buf);
 			ck_cs_wire();
+			ck_cs_wire();
+
 		}
 
 	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
