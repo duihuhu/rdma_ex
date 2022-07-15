@@ -183,14 +183,15 @@ int init_ib(struct Resource *res)
 	int i;
 	for (i=0; i<num_devices; ++i) {
 		if (!cfg.dev_name) {
-			ib_dev = ibv_devices[i];
-			break;
+			cfg.dev_name = strdup(ibv_get_device_name(ibv_devices[i]));
+			fprintf(stdout, "device not specified using first one found: %s\n", cfg.dev_name);
+
 		}
 		if (!strcmp(cfg.dev_name, ibv_get_device_name(ibv_devices[i]))) {
-			ib_dev = ibv_devices[i];
 			break;
 		}
 	}
+	ib_dev = ibv_devices[i];
 	if (!ib_dev) {
 		fprintf(stdout, "no device name\n");
 		goto init_ib_exit;
@@ -200,19 +201,32 @@ int init_ib(struct Resource *res)
 		fprintf(stdout, "can't open device\n");
 		goto init_ib_exit;
 	}
+	int ret;
+	ret = ibv_query_port(res->ctx, IB_PORT, &res->port_attr);
+	if (ret) {
+		fprintf(stdout, "query port info failed\n");
+		return -1;
+	}
 	res->pd = ibv_alloc_pd(res->ctx);
 	if (!res->pd) {
 		fprintf(stdout, "alloc pd failed\n");
 		goto init_ib_exit;
 	}
+
+	res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
+	if (!res->cq) {
+		fprintf(stdout, "failed create cq\n");
+		goto init_ib_exit;
+	}
+
 	res->ib_buf_size = cfg.msg_size;
 	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
 	res->ib_buf = (char *) malloc(res->ib_buf_size);
-	memset(res->ib_buf, 0, res->ib_buf_size);
 	if (!res->ib_buf) {
 		fprintf(stdout, "alloc buffer failed\n");
 		goto init_ib_exit;
 	}
+	memset(res->ib_buf, 0, res->ib_buf_size);
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
 	res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
@@ -226,32 +240,26 @@ int init_ib(struct Resource *res)
 		fprintf(stdout, "failed to query device\n ");
 		goto init_ib_exit;
 	}
-	res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
-	if (!res->cq) {
-		fprintf(stdout, "failed create cq\n");
-		goto init_ib_exit;
-	}
-	struct ibv_qp_init_attr qp_init_attr;
-	memset(&qp_init_attr, 0, sizeof(qp_init_attr));
-	qp_init_attr.send_cq = res->cq;
-	qp_init_attr.recv_cq = res->cq;
-	qp_init_attr.qp_type = IBV_QPT_RC;
-	qp_init_attr.cap.max_send_wr = 10;
-	qp_init_attr.cap.max_recv_wr = 10;
-	qp_init_attr.cap.max_send_sge = 1;
-	qp_init_attr.cap.max_recv_sge = 1;
+	
+	struct ibv_qp_init_attr qp_init_attr = {
+		.send_cq = res->cq,
+		.recv_cq = res->cq,
+		.cap = {
+			.max_send_wr = 1,
+			.max_recv_wr = 1,
+			.max_send_sge = 1,
+			.max_recv_sge = 1,
+		},
+		.qp_type = IBV_QPT_RC,
+		.sq_sig_all = 1,
+	};
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
 	if (!res->qp) {
 		fprintf(stdout, "failed create qp\n");
 		goto init_ib_exit;
 	}
 	fprintf(stdout, "QP created , QP number=0x%x\n", res->qp->qp_num);
-	int ret;
-	ret = ibv_query_port(res->ctx, IB_PORT, &res->port_attr);
-	if (ret) {
-		fprintf(stdout, "query port info failed\n");
-		return -1;
-	}
+
 	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res->ib_buf, res->mr->lkey, res->mr->rkey, mflags);
 	if (!cfg.server_name) {
 		ret = socket_connect(res, NULL, cfg.tcp_port);
