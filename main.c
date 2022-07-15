@@ -21,7 +21,7 @@ struct Config cfg = {
 	"SR", /* op type */
 };
 
-void init_config();
+int init_config();
 int main(int argc, char *argv[]){
 	int ret = 0;
 	ret = init_config(argc, argv);
