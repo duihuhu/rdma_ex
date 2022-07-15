@@ -334,7 +334,7 @@ int post_send(int opcode)
 	/* prepare the scatter/gather entry */
 	memset(&sge, 0, sizeof(sge));
 	sge.addr = (uintptr_t)res.ib_buf;
-	sge.length = sizeof(res.ib_buf);
+	sge.length = 10;
 	sge.lkey = res.mr->lkey;
 	/* prepare the send work request */
 	memset(&sr, 0, sizeof(sr));
