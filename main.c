@@ -23,6 +23,7 @@ struct Config cfg = {
 
 int init_config();
 int main(int argc, char *argv[]){
+	struct Resource res;
 	int ret = 0;
 	ret = init_config(argc, argv);
 	if (ret == -1){
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
 
-	ret = init_ib();
+	ret = init_ib(&res);
 
 	if (ret == -1) {
 		fprintf(stdout,"init ib devices failed\n");
@@ -55,17 +56,17 @@ int main(int argc, char *argv[]){
 				fprintf(stderr, "poll completion failed read\n");
 				return -1;
 			}
-			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
+			fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
-			strcpy(res.ib_buf, "R");
-			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			strcpy(res->ib_buf, "R");
+			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			ck_cs_wire();
 		}
 
 	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
 		if (cfg.server_name) {
-			memset(res.ib_buf, 'W', res.ib_buf_size);
-			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			memset(res->ib_buf, 'W', res->ib_buf_size);
+			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			if (post_send(IBV_WR_RDMA_WRITE))
 			{
 				fprintf(stderr, "failed to post SR 3\n");
