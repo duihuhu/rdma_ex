@@ -210,7 +210,7 @@ int init_ib()
 	}
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
-	res.mr = ibv_reg_mr(res.pd, res.ib_buf, res.ib_buf_size, mflags);
+	res.mr = ibv_reg_mr(res.pd, (void *)res.ib_buf, res.ib_buf_size, mflags);
 	if (!res.mr) {
 		fprintf(stdout, "alloc mr failed\n");
 		goto init_ib_exit;
@@ -221,7 +221,7 @@ int init_ib()
 		fprintf(stdout, "failed to query device\n ");
 		goto init_ib_exit;
 	}
-	res.cq = ibv_create_cq(res.ctx, res.dev_attr.max_cqe, NULL, NULL, 0);
+	res.cq = ibv_create_cq(res.ctx, 1, NULL, NULL, 0);
 	if (!res.cq) {
 		fprintf(stdout, "failed create cq\n");
 		goto init_ib_exit;
