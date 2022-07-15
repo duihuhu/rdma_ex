@@ -1,3 +1,4 @@
+.vscode/*
 rdma-init
 # Prerequisites
 *.d
