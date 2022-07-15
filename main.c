@@ -36,12 +36,12 @@ int main(int argc, char *argv[]){
 		fprintf(stdout,"init ib devices failed\n");
 	}
 
-	if (strcmp(cfg.op_type, IB_OP_SR)) {
+	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (!cfg.server_name) {
 			return 0;
 		};
 
-	} else if (strcmp(cfg.op_type, IB_OP_RD)) {
+	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
 			/* read contens of server's buffer */
 			if (post_send(IBV_WR_RDMA_READ))
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
 		}
 
-	} else if (strcmp(cfg.op_type, IB_OP_WR)) {
+	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
 		return 0;
 	}
 
