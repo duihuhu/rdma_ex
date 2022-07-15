@@ -250,7 +250,7 @@ int init_ib(struct Resource *res)
 	qp_init_attr.cap.max_recv_wr = 10;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
-	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
+	res->qp = ibv_create_qp(res->ctx, &qp_init_attr);
 	if (!res->qp) {
 		fprintf(stdout, "failed create qp\n");
 		goto init_ib_exit;
