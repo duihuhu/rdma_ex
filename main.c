@@ -59,7 +59,7 @@ void init_config(int argc, char *argv[])
 			{.name = "op-type", .has_arg = 1, .val = 'o'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
-		c = getopt_long(argc, argv, "p:d:s:t:", long_options, NULL);
+		c = getopt_long(argc, argv, "p:d:s:t:o:", long_options, NULL);
 		if (c == -1)
 			break;
 		switch (c)
