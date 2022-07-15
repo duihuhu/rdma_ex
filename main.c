@@ -42,7 +42,9 @@ int main(int argc, char *argv[]){
 		};
 
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
+		
 		if (cfg.server_name) {
+			ck_cs_wire();
 			/* read contens of server's buffer */
 			if (post_send(IBV_WR_RDMA_READ))
 			{
@@ -55,6 +57,11 @@ int main(int argc, char *argv[]){
 				return -1;
 			}
 			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
+		} else {
+
+			memset(res.ib_buf, 'T', res.ib_buf_size);
+			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			ck_cs_wire();
 		}
 
 	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
