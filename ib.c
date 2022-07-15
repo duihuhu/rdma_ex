@@ -149,7 +149,7 @@ int ex_qp_info()
 	}
 	res.rkey = remote_info.rkey;
 	res.raddr = remote_info.raddr;
-	fprintf(stdout, "local key 0x%x, local addr 0x%lx, remote key 0x%x, remote addr 0x%lx\n", res.mr->rkey, res.ib_buf, res.rkey, res.raddr);
+	fprintf(stdout, "local key 0x%x, local addr 0x%p, remote key 0x%x, remote addr 0x%lx\n", res.mr->rkey, res.ib_buf, res.rkey, res.raddr);
 	
 	ret = conv_qp_status(res.qp, remote_info.qp_num, remote_info.lid);
 	if (ret < 0) {
@@ -163,6 +163,7 @@ int ex_qp_info()
 	}
 	return 0;
 }
+
 int init_ib()
 {
 	struct ibv_device	**ibv_devices = NULL;
