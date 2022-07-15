@@ -50,7 +50,7 @@ int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 			.qp_state = IBV_QPS_INIT,
 			.pkey_index = 0,
 			.port_num = IB_PORT,
-			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_LOCAL_READ | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC,
+			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE  | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC,
 		};
 		if (ibv_modify_qp(res.qp, &attr, IBV_QP_STATE | IBV_QP_PKEY_INDEX | IBV_QP_PORT | IBV_QP_ACCESS_FLAGS))
 		{
@@ -207,7 +207,7 @@ int init_ib()
 		goto init_ib_exit;
 	}
 	int mflags = 0;
-	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_LOCAL_READ | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
+	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
 	res.mr = ibv_reg_mr(res.pd, (void *)res.ib_buf, res.ib_buf_size, mflags);
 	if (!res.mr) {
 		fprintf(stdout, "alloc mr failed\n");
