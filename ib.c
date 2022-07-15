@@ -241,17 +241,15 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	
-	struct ibv_qp_init_attr qp_init_attr = {
-		.send_cq = res->cq,
-		.recv_cq = res->cq,
-		.cap = {
-			.max_send_wr = 10,
-			.max_recv_wr = 10,
-			.max_send_sge = 1,
-			.max_recv_sge = 1,
-		},
-		.qp_type = IBV_QPT_RC,
-	};
+	struct ibv_qp_init_attr qp_init_attr;
+	memset(&qp_init_attr, 0, sizeof(qp_init_attr));
+	qp_init_attr.send_cq = res->cq;
+	qp_init_attr.recv_cq = res->cq;
+	qp_init_attr.qp_type = IBV_QPT_RC;
+	qp_init_attr.cap.max_send_wr = 10;
+	qp_init_attr.cap.max_recv_wr = 10;
+	qp_init_attr.cap.max_send_sge = 1;
+	qp_init_attr.cap.max_recv_sge = 1;
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
 	if (!res->qp) {
 		fprintf(stdout, "failed create qp\n");
