@@ -125,16 +125,18 @@ int ex_qp_info(struct Resource *res)
 	local_info.raddr = htonll((uintptr_t)res->ib_buf);
 	int ret;
 	if (!cfg.server_name) {
-		ret = get_qp_info(res->sockfd, &remote_info);
-		if (ret < 0) {
-			fprintf(stdout, "failed to get qp info by server\n");
-			return -1;
-		}
+
 		ret = set_qp_info(res->sockfd, &local_info);
 		if (ret < 0) {
 			fprintf(stdout, "failed to set qp info by server\n");
 			return -1;
 		}
+		ret = get_qp_info(res->sockfd, &remote_info);
+		if (ret < 0) {
+			fprintf(stdout, "failed to get qp info by server\n");
+			return -1;
+		}
+
 	} else {
 		ret = set_qp_info(res->sockfd, &local_info);
 		if (ret < 0) {

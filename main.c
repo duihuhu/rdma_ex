@@ -35,6 +35,7 @@ int main(int argc, char *argv[]){
 
 	if (ret == -1) {
 		fprintf(stdout,"init ib devices failed\n");
+		return 0;
 	}
 
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
