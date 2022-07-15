@@ -96,7 +96,7 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 	return 0;
 }
 
-int ck_cs_wire() {
+int ck_cs_wire(struct Resource *res) {
 	int ret;
 	char buf[10] = {'\0'};
 	strcpy(buf, SYNC_MES);
@@ -156,7 +156,7 @@ int ex_qp_info(struct Resource *res)
 		fprintf(stdout, "failed to convert qp status \n");
 		return -1;
 	}
-	ret = ck_cs_wire();
+	ret = ck_cs_wire(res);
 	if (ret < 0) {
 		fprintf(stdout, "server-client is not ready\n");
 		return -1;
