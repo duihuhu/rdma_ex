@@ -240,6 +240,7 @@ int init_ib()
 		fprintf(stdout, "failed create qp\n");
 		goto init_ib_exit;
 	}
+	fprintf(stdout, "QP created , QP number=0x%x", res.qp->qp_num);
 	int ret;
 	ret = ibv_query_port(res.ctx, IB_PORT, &res.port_attr);
 	if (ret) {
