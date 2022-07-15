@@ -254,7 +254,7 @@ int init_ib(struct Resource *res)
 	}
 	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res->ib_buf, res->mr->lkey, res->mr->rkey, mflags);
 	if (!cfg.server_name) {
-		ret = socket_connect(NULL, cfg.tcp_port);
+		ret = socket_connect(res, NULL, cfg.tcp_port);
 		if (ret < 0) {
 			fprintf(stdout, "failed to establish server\n");
 			goto init_ib_exit;
