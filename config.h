@@ -9,12 +9,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 struct Config {
-	bool	is_server;
-	uint32_t	tcp_port;
+	char	*server_name;
 	char	*dev_name;
+	uint32_t	tcp_port;
 	int		msg_size;
 	int		threads;
-	char	*server_name;
 };
 extern struct Config cfg;
 

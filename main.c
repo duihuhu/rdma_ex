@@ -12,7 +12,20 @@
 #include "config.h"
 #include "ib.h"
 
-struct Config cfg;
+struct Config cfg = {
+	NULL, 
+	NULL,
+	7000,
+	1,
+	1,
+};
+
+struct config_t config = {
+	NULL,  /* dev_name */
+	NULL,  /* server_name */
+	19875, /* tcp_port */
+	1,	 /* ib_port */
+	-1 /* gid_idx */};
 void init_config();
 int main(int argc, char *argv[]){
 	int ret = 0;
@@ -31,9 +44,9 @@ static void usage(const char *argv0)
 	fprintf(stdout, " %s <host> connect to server at <host>\n", argv0);
 	fprintf(stdout, "\n");
 	fprintf(stdout, "Options:\n");
-	fprintf(stdout, " -p, --port <port> listen on/connect to port <port> \n");
+	fprintf(stdout, " -p, --port <port> listen on/connect to port <port> default 7000\n");
 	fprintf(stdout, " -d, --ib-dev <dev> use IB device <dev> (default first device found)\n");
-	fprintf(stdout, " -s, --msg-size  (default 1)\n");
+	fprintf(stdout, " -s, --msg-size  (default 1 alloc numbers of page)\n");
 	fprintf(stdout, " -t, --threads (defulat 1)\n");
 }
 
@@ -49,7 +62,7 @@ void init_config(int argc, char *argv[])
 			{.name = "threads", .has_arg = 1, .val = 'c'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
-		c = getopt_long(argc, argv, "p:d:s:c:", long_options, NULL);
+		c = getopt_long(argc, argv, "p:d:s:t:", long_options, NULL);
 		if (c == -1)
 			break;
 		switch (c)
