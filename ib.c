@@ -291,7 +291,7 @@ init_ib_exit:
 }
 
 
-int poll_completion()
+int poll_completion(struct Resource *res)
 {
 	struct ibv_wc wc;
 	unsigned long start_time_msec;
@@ -334,7 +334,7 @@ int poll_completion()
 	return rc;
 }
 
-int post_send(int opcode)
+int post_send(struct Resource *res, int opcode)
 {
 	struct ibv_send_wr sr;
 	struct ibv_sge sge;

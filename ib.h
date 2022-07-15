@@ -39,9 +39,9 @@ struct QpInfo {
 };
 // extern struct Resource res;
 
-int init_ib();
-int ck_cs_wire();
-int post_send(int opcode);
-int poll_completion();
+int init_ib(struct Resource *res);
+int ck_cs_wire(struct Resource *res);
+int post_send(struct Resource *res, int opcode);
+int poll_completion(struct Resource *res);
 
 #endif /*ib.h*/
