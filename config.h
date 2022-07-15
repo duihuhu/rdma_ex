@@ -13,7 +13,7 @@ struct Config {
 	char	*dev_name;
 	uint32_t	tcp_port;
 	int		msg_size;
-	int		threads;
+	int		num_threads;
 	char	*op_type;
 };
 extern struct Config cfg;

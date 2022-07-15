@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 
 	if (strcmp(cfg.op_type, IB_OP_SR)) {
 		if (!cfg.server_name) {
-			break;
+			return 0;
 		};
 
 	} else if (strcmp(cfg.op_type, IB_OP_RD)) {
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 		}
 
 	} else if (strcmp(cfg.op_type, IB_OP_WR)) {
-		break;
+		return 0;
 	}
 
 	return 0;
