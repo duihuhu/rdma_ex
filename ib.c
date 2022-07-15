@@ -50,7 +50,7 @@ int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 			.qp_state = IBV_QPS_INIT,
 			.pkey_index = 0,
 			.port_num = IB_PORT,
-			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE  | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC,
+			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE  | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE ,
 		};
 		if (ibv_modify_qp(res.qp, &attr, IBV_QP_STATE | IBV_QP_PKEY_INDEX | IBV_QP_PORT | IBV_QP_ACCESS_FLAGS))
 		{
