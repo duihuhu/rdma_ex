@@ -37,7 +37,7 @@ struct QpInfo {
 	uint32_t rkey;
 	uint64_t raddr;
 };
-extern struct Resource res;
+// extern struct Resource res;
 
 int init_ib();
 int ck_cs_wire();

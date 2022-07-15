@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <netinet/in.h>
 #include <unistd.h>
-extern struct Resource res;
+// extern struct Resource res;
 
 uint64_t htonll(uint64_t n)
 {

@@ -10,7 +10,7 @@
 #include "ib.h"
 #include "config.h"
 #include "sock.h"
-struct Resource res;
+
 int get_qp_info(int sockfd, struct QpInfo *qp_info)
 {
 	int ret;
@@ -52,7 +52,7 @@ int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 			.port_num = IB_PORT,
 			.qp_access_flags = IBV_ACCESS_LOCAL_WRITE  | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC,
 		};
-		if (ibv_modify_qp(res.qp, &attr, IBV_QP_STATE | IBV_QP_PKEY_INDEX | IBV_QP_PORT | IBV_QP_ACCESS_FLAGS))
+		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_PKEY_INDEX | IBV_QP_PORT | IBV_QP_ACCESS_FLAGS))
 		{
 			fprintf(stdout, "failed to convert to INIT");
 			return -1;
@@ -73,7 +73,7 @@ int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 			.ah_attr.src_path_bits = 0,
 			.ah_attr.port_num = IB_PORT,
 		};
-		if (ibv_modify_qp(res.qp, &attr, IBV_QP_STATE | IBV_QP_PATH_MTU | IBV_QP_DEST_QPN | IBV_QP_RQ_PSN | IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER | IBV_QP_AV)) {
+		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_PATH_MTU | IBV_QP_DEST_QPN | IBV_QP_RQ_PSN | IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER | IBV_QP_AV)) {
 			fprintf(stdout, "failed to convert to RTR");
 			return -1;
 		}
@@ -88,7 +88,7 @@ int conv_qp_status(struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
 			.rnr_retry = 7,
 			.max_rd_atomic = 1, 
 		};
-		if (ibv_modify_qp(res.qp, &attr, IBV_QP_STATE | IBV_QP_SQ_PSN | IBV_QP_TIMEOUT | IBV_QP_RETRY_CNT | IBV_QP_RNR_RETRY | IBV_QP_MAX_QP_RD_ATOMIC)) {
+		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_SQ_PSN | IBV_QP_TIMEOUT | IBV_QP_RETRY_CNT | IBV_QP_RNR_RETRY | IBV_QP_MAX_QP_RD_ATOMIC)) {
 			fprintf(stdout, "failed to convert to RTS");
 			return -1;
 		}
@@ -100,12 +100,12 @@ int ck_cs_wire() {
 	int ret;
 	char buf[10] = {'\0'};
 	strcpy(buf, SYNC_MES);
-	ret = sock_write(res.sockfd, (char *)buf, sizeof(SYNC_MES));
+	ret = sock_write(res->sockfd, (char *)buf, sizeof(SYNC_MES));
 	if (ret < 0) {
 		fprintf(stdout,"failed to write sync\n");
 		return -1;
 	}
-	ret = sock_read(res.sockfd, (char *)buf, sizeof(SYNC_MES));
+	ret = sock_read(res->sockfd, (char *)buf, sizeof(SYNC_MES));
 	if (ret < 0) {
 		fprintf(stdout, "failed to read sync\n");
 		return -1;
@@ -114,44 +114,44 @@ int ck_cs_wire() {
 	return 0;
 }
 
-int ex_qp_info()
+int ex_qp_info(struct Resource *res)
 {
 	struct QpInfo local_info;
 	struct QpInfo remote_info;
 	memset(&remote_info, 0, sizeof(struct QpInfo));
-	local_info.lid = htons(res.port_attr.lid);
-	local_info.qp_num = htonl(res.qp->qp_num);
-	local_info.rkey = htonl(res.mr->rkey);
-	local_info.raddr = htonll((uintptr_t)res.ib_buf);
+	local_info.lid = htons(res->port_attr.lid);
+	local_info.qp_num = htonl(res->qp->qp_num);
+	local_info.rkey = htonl(res->mr->rkey);
+	local_info.raddr = htonll((uintptr_t)res->ib_buf);
 	int ret;
 	if (!cfg.server_name) {
-		ret = get_qp_info(res.sockfd, &remote_info);
+		ret = get_qp_info(res->sockfd, &remote_info);
 		if (ret < 0) {
 			fprintf(stdout, "failed to get qp info by server\n");
 			return -1;
 		}
-		ret = set_qp_info(res.sockfd, &local_info);
+		ret = set_qp_info(res->sockfd, &local_info);
 		if (ret < 0) {
 			fprintf(stdout, "failed to set qp info by server\n");
 			return -1;
 		}
 	} else {
-		ret = set_qp_info(res.sockfd, &local_info);
+		ret = set_qp_info(res->sockfd, &local_info);
 		if (ret < 0) {
 			fprintf(stdout, "failed to set qp info by client\n");
 			return -1;
 		}
-		ret= get_qp_info(res.sockfd, &remote_info);
+		ret= get_qp_info(res->sockfd, &remote_info);
 		if (ret < 0) {
 			fprintf(stdout, "failed to get qp info by client\n");
 			return -1;
 		}
 	}
-	res.rkey = remote_info.rkey;
-	res.raddr = remote_info.raddr;
-	fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res.mr->rkey, res.ib_buf, res.rkey, res.raddr);
+	res->rkey = remote_info.rkey;
+	res->raddr = remote_info.raddr;
+	fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res->mr->rkey, res->ib_buf, res->rkey, res->raddr);
 	
-	ret = conv_qp_status(res.qp, remote_info.qp_num, remote_info.lid);
+	ret = conv_qp_status(res->qp, remote_info.qp_num, remote_info.lid);
 	if (ret < 0) {
 		fprintf(stdout, "failed to convert qp status \n");
 		return -1;
@@ -164,7 +164,12 @@ int ex_qp_info()
 	return 0;
 }
 
-int init_ib()
+void resource_init(struct Resource *res)
+{
+	memset(res, 0, sizeof *res);
+	res->sockfd = -1;
+}
+int init_ib(struct Resource *res)
 {
 	struct ibv_device	**ibv_devices = NULL;
 	struct ibv_device	*ib_dev = NULL;
@@ -190,64 +195,64 @@ int init_ib()
 		fprintf(stdout, "no device name\n");
 		goto init_ib_exit;
 	}
-	res.ctx = ibv_open_device(ib_dev);
-	if (!res.ctx) {
+	res->ctx = ibv_open_device(ib_dev);
+	if (!res->ctx) {
 		fprintf(stdout, "can't open device\n");
 		goto init_ib_exit;
 	}
-	res.pd = ibv_alloc_pd(res.ctx);
-	if (!res.pd) {
+	res->pd = ibv_alloc_pd(res->ctx);
+	if (!res->pd) {
 		fprintf(stdout, "alloc pd failed\n");
 		goto init_ib_exit;
 	}
-	res.ib_buf_size = cfg.msg_size;
-	// res.ib_buf = (char *) memalign(PAGE_SIZE, res.ib_buf_size);
-	res.ib_buf = (char *) malloc(res.ib_buf_size);
-	memset(res.ib_buf, 0, res.ib_buf_size);
-	if (!res.ib_buf) {
+	res->ib_buf_size = cfg.msg_size;
+	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
+	res->ib_buf = (char *) malloc(res->ib_buf_size);
+	memset(res->ib_buf, 0, res->ib_buf_size);
+	if (!res->ib_buf) {
 		fprintf(stdout, "alloc buffer failed\n");
 		goto init_ib_exit;
 	}
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
-	res.mr = ibv_reg_mr(res.pd, (void *)res.ib_buf, res.ib_buf_size, mflags);
-	if (!res.mr) {
+	res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
+	if (!res->mr) {
 		fprintf(stdout, "alloc mr failed\n");
 		goto init_ib_exit;
 	}
 	int rc;
-	rc = ibv_query_device(res.ctx, &res.dev_attr);
+	rc = ibv_query_device(res->ctx, &res->dev_attr);
 	if (rc) {
 		fprintf(stdout, "failed to query device\n ");
 		goto init_ib_exit;
 	}
-	res.cq = ibv_create_cq(res.ctx, 1, NULL, NULL, 0);
-	if (!res.cq) {
+	res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
+	if (!res->cq) {
 		fprintf(stdout, "failed create cq\n");
 		goto init_ib_exit;
 	}
 	struct ibv_qp_init_attr qp_init_attr;
 	memset(&qp_init_attr, 0, sizeof(qp_init_attr));
-	qp_init_attr.send_cq = res.cq;
-	qp_init_attr.recv_cq = res.cq;
+	qp_init_attr.send_cq = res->cq;
+	qp_init_attr.recv_cq = res->cq;
 	qp_init_attr.qp_type = IBV_QPT_RC;
 	qp_init_attr.cap.max_send_wr = 10;
 	qp_init_attr.cap.max_recv_wr = 10;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
-	res.qp = ibv_create_qp(res.pd, &qp_init_attr);
-	if (!res.qp) {
+	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
+	if (!res->qp) {
 		fprintf(stdout, "failed create qp\n");
 		goto init_ib_exit;
 	}
-	fprintf(stdout, "QP created , QP number=0x%x\n", res.qp->qp_num);
+	fprintf(stdout, "QP created , QP number=0x%x\n", res->qp->qp_num);
 	int ret;
-	ret = ibv_query_port(res.ctx, IB_PORT, &res.port_attr);
+	ret = ibv_query_port(res->ctx, IB_PORT, &res->port_attr);
 	if (ret) {
 		fprintf(stdout, "query port info failed\n");
 		return -1;
 	}
-	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
+	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res->ib_buf, res->mr->lkey, res->mr->rkey, mflags);
 	if (!cfg.server_name) {
 		ret = socket_connect(NULL, cfg.tcp_port);
 		if (ret < 0) {
@@ -261,25 +266,25 @@ int init_ib()
 			goto init_ib_exit;
 		}
 	}
-	ret = ex_qp_info();
+	ret = ex_qp_info(res);
 	if (ret < 0) {
 		fprintf(stdout, "failed ex qp info\n");
 		goto init_ib_exit;
 	}
 	return 0;
 init_ib_exit:
-	if (res.qp)
-		ibv_destroy_qp(res.qp);
-	if (res.cq)
-		ibv_destroy_cq(res.cq);
-	if (res.mr)
-		ibv_dereg_mr(res.mr);
-	if (res.ib_buf)
-		free(res.ib_buf);
-	if (res.pd)
-		ibv_dealloc_pd(res.pd);
-	if (res.ctx)
-		ibv_close_device(res.ctx);
+	if (res->qp)
+		ibv_destroy_qp(res->qp);
+	if (res->cq)
+		ibv_destroy_cq(res->cq);
+	if (res->mr)
+		ibv_dereg_mr(res->mr);
+	if (res->ib_buf)
+		free(res->ib_buf);
+	if (res->pd)
+		ibv_dealloc_pd(res->pd);
+	if (res->ctx)
+		ibv_close_device(res->ctx);
 	if (ibv_devices)
 		ibv_free_device_list(ibv_devices);
 	return -1;
@@ -299,7 +304,7 @@ int poll_completion()
 	start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	do
 	{
-		poll_result = ibv_poll_cq(res.cq, 1, &wc);
+		poll_result = ibv_poll_cq(res->cq, 1, &wc);
 		gettimeofday(&cur_time, NULL);
 		cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	} while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
@@ -337,9 +342,9 @@ int post_send(int opcode)
 	int rc;
 	/* prepare the scatter/gather entry */
 	memset(&sge, 0, sizeof(sge));
-	sge.addr = (uintptr_t)res.ib_buf;
-	sge.length = res.ib_buf_size;
-	sge.lkey = res.mr->lkey;
+	sge.addr = (uintptr_t)res->ib_buf;
+	sge.length = res->ib_buf_size;
+	sge.lkey = res->mr->lkey;
 	/* prepare the send work request */
 	memset(&sr, 0, sizeof(sr));
 	sr.next = NULL;
@@ -350,11 +355,11 @@ int post_send(int opcode)
 	sr.send_flags = IBV_SEND_SIGNALED;
 	if (opcode != IBV_WR_SEND)
 	{
-		sr.wr.rdma.remote_addr = res.raddr;
-		sr.wr.rdma.rkey = res.rkey;
+		sr.wr.rdma.remote_addr = res->raddr;
+		sr.wr.rdma.rkey = res->rkey;
 	}
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
-	rc = ibv_post_send(res.qp, &sr, &bad_wr);
+	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	if (rc)
 		fprintf(stderr, "failed to post SR\n");
 	else
