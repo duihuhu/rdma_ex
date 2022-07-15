@@ -78,6 +78,7 @@ int main(int argc, char *argv[]){
 				fprintf(stderr, "poll completion failed 3\n");
 				return -1;
 			}
+			fprintf(stdout, "Contents of server's write buffer: '%s'\n", res.ib_buf);
 		}
 	}
 
