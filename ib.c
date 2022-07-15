@@ -260,7 +260,7 @@ int init_ib(struct Resource *res)
 			goto init_ib_exit;
 		}
 	} else {
-		ret = socket_connect(cfg.server_name, cfg.tcp_port);
+		ret = socket_connect(res, cfg.server_name, cfg.tcp_port);
 		if (ret < 0) {
 			fprintf(stdout, "failed to establish connect\n");
 			goto init_ib_exit;

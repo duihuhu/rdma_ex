@@ -22,7 +22,7 @@ uint64_t ntohll(uint64_t n)
 {
 	return (((uint64_t)ntohl(n))<<32) | ntohl(n>>32);
 }
-int socket_connect(char *server_name, uint32_t tcp_port)
+int socket_connect(struct Resource *res, char *server_name, uint32_t tcp_port)
 {
 	struct addrinfo hints = {
 		.ai_family = AF_INET,
@@ -56,8 +56,8 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 					fprintf (stdout, "listen failed\n");
 					return -1;
 				}
-				res.sockfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
-				if (res.sockfd < 0) {
+				res->sockfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
+				if (res->sockfd < 0) {
 					fprintf( stdout, "accept failed\n");
 					 return -1;
 				}
@@ -67,7 +67,7 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 					close(sockfd);
 					return  - 1; 
 				}
-				res.sockfd = sockfd;
+				res->sockfd = sockfd;
 			}
 		}
 	}

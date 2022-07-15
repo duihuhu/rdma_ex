@@ -7,7 +7,8 @@
 #ifndef SOCK_H_
 #define SCOK_H_
 #include <stdint.h>
-int socket_connect(char *server_name, uint32_t tcp_port);
+#include "ib.h"
+int socket_connect(struct Resource *res,char *server_name, uint32_t tcp_port);
 int sock_read(int sockfd, void *buffer, int len);
 int sock_write(int sockfd, void *buffer,int len);
 uint64_t htonll(uint64_t n);
