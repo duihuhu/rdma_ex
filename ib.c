@@ -245,7 +245,7 @@ int init_ib()
 		fprintf(stdout, "query port info failed\n");
 		return -1;
 	}
-	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", (uintptr_t)res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
+	fprintf(stdout, "mr was register addr=%lu, lkey=0x%x, rkey=0x%x, flags=0x%x\n", (uintptr_t)res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
 	if (!cfg.server_name) {
 		ret = socket_connect(NULL, cfg.tcp_port);
 		if (ret < 0) {
