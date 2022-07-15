@@ -13,19 +13,13 @@
 #include "ib.h"
 
 struct Config cfg = {
-	NULL, 
-	NULL,
-	7000,
-	1,
-	1,
+	NULL, /* dev_name */
+	NULL, /* server_name */
+	7000, /* tcp_port */
+	1, 	/*size */
+	1,  /*threads */
 };
 
-struct config_t config = {
-	NULL,  /* dev_name */
-	NULL,  /* server_name */
-	19875, /* tcp_port */
-	1,	 /* ib_port */
-	-1 /* gid_idx */};
 void init_config();
 int main(int argc, char *argv[]){
 	int ret = 0;
