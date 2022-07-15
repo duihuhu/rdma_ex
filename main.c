@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 			}
 			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
 		} else {
-			strcpy(res.ib_buf, 'R');
+			strcpy(res.ib_buf, "R");
 			fprintf(stdout, "res buf %s\n", res.ib_buf);
 			ck_cs_wire();
 		}
