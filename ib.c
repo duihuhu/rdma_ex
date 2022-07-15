@@ -213,6 +213,13 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 
+	int rc;
+	rc = ibv_query_device(res->ctx, &res->dev_attr);
+	if (rc) {
+		fprintf(stdout, "failed to query device\n ");
+		goto init_ib_exit;
+	}
+	
 	res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
 	if (!res->cq) {
 		fprintf(stdout, "failed create cq\n");
@@ -234,13 +241,7 @@ int init_ib(struct Resource *res)
 		fprintf(stdout, "alloc mr failed\n");
 		goto init_ib_exit;
 	}
-	int rc;
-	rc = ibv_query_device(res->ctx, &res->dev_attr);
-	if (rc) {
-		fprintf(stdout, "failed to query device\n ");
-		goto init_ib_exit;
-	}
-	
+
 	struct ibv_qp_init_attr qp_init_attr;
 	memset(&qp_init_attr, 0, sizeof(qp_init_attr));
 	qp_init_attr.send_cq = res->cq;
@@ -250,7 +251,7 @@ int init_ib(struct Resource *res)
 	qp_init_attr.cap.max_recv_wr = 10;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
-	res->qp = ibv_create_qp(res->ctx, &qp_init_attr);
+	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
 	if (!res->qp) {
 		fprintf(stdout, "failed create qp\n");
 		goto init_ib_exit;
