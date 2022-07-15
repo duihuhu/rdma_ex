@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
 	ret = init_ib();
 
 	if (ret == -1) {
-		fprintf(stdout,"init ib devices failed");
+		fprintf(stdout,"init ib devices failed\n");
 	}
 	return 0;
 }
@@ -49,7 +49,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, " -d, --ib-dev <dev> use IB device <dev> (default first device found)\n");
 	fprintf(stdout, " -s, --msg-size  (default 1 alloc numbers of page)\n");
 	fprintf(stdout, " -t, --threads (defulat 1)\n");
-	fprintf(stdout, " -o, --op-type (default type send/recv)");
+	fprintf(stdout, " -o, --op-type (default type send/recv)\n");
 }
 
 int init_config(int argc, char *argv[])
