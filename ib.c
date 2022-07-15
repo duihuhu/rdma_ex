@@ -213,6 +213,7 @@ int init_ib()
 		goto init_ib_exit;
 	}
 	memset(res.ib_buf, 'T', res.ib_buf_size);
+	fprintf(stdout, "res buf %s", res.ib_buf);
 	int rc;
 	rc = ibv_query_device(res.ctx, &res.dev_attr);
 	if (rc) {
@@ -335,7 +336,7 @@ int post_send(int opcode)
 	/* prepare the scatter/gather entry */
 	memset(&sge, 0, sizeof(sge));
 	sge.addr = (uintptr_t)res.ib_buf;
-	sge.length = 10;
+	sge.length = res.ib_buf_size;
 	sge.lkey = res.mr->lkey;
 	/* prepare the send work request */
 	memset(&sr, 0, sizeof(sr));
