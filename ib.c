@@ -245,13 +245,12 @@ int init_ib(struct Resource *res)
 		.send_cq = res->cq,
 		.recv_cq = res->cq,
 		.cap = {
-			.max_send_wr = 1,
-			.max_recv_wr = 1,
+			.max_send_wr = 10,
+			.max_recv_wr = 10,
 			.max_send_sge = 1,
 			.max_recv_sge = 1,
 		},
 		.qp_type = IBV_QPT_RC,
-		.sq_sig_all = 1,
 	};
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
 	if (!res->qp) {
