@@ -334,7 +334,7 @@ int post_send(int opcode)
 	memset(&sge, 0, sizeof(sge));
 	sge.addr = (uintptr_t)res.ib_buf;
 	sge.length = sizeof(res.ib_buf);
-	sge.lkey = res->mr->lkey;
+	sge.lkey = res.mr->lkey;
 	/* prepare the send work request */
 	memset(&sr, 0, sizeof(sr));
 	sr.next = NULL;
@@ -345,11 +345,11 @@ int post_send(int opcode)
 	sr.send_flags = IBV_SEND_SIGNALED;
 	if (opcode != IBV_WR_SEND)
 	{
-		sr.wr.rdma.remote_addr = res->remote_props.addr;
-		sr.wr.rdma.rkey = res->remote_props.rkey;
+		sr.wr.rdma.remote_addr = res.raddr;
+		sr.wr.rdma.rkey = res.rkey;
 	}
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
-	rc = ibv_post_send(res->qp, &sr, &bad_wr);
+	rc = ibv_post_send(res.qp, &sr, &bad_wr);
 	if (rc)
 		fprintf(stderr, "failed to post SR\n");
 	else
