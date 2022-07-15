@@ -149,7 +149,7 @@ int ex_qp_info()
 	}
 	res.rkey = remote_info.rkey;
 	res.raddr = remote_info.raddr;
-	fprintf(stdout, "local key 0x%x, local addr %s, remote key 0x%x, remote addr 0x%lx\n", res.mr->rkey, res.ib_buf, res.rkey, res.raddr);
+	fprintf(stdout, "local key 0x%x, local addr 0x%lx, remote key 0x%x, remote addr 0x%lx\n", res.mr->rkey, res.ib_buf, res.rkey, res.raddr);
 	
 	ret = conv_qp_status(res.qp, remote_info.qp_num, remote_info.lid);
 	if (ret < 0) {
@@ -245,7 +245,7 @@ int init_ib()
 		fprintf(stdout, "query port info failed\n");
 		return -1;
 	}
-	fprintf(stdout, "mr was register addr=%lu, lkey=0x%x, rkey=0x%x, flags=0x%x\n", (uintptr_t)res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
+	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res.ib_buf, res.mr->lkey, res.mr->rkey, mflags);
 	if (!cfg.server_name) {
 		ret = socket_connect(NULL, cfg.tcp_port);
 		if (ret < 0) {
