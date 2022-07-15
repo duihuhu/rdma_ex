@@ -42,19 +42,18 @@ int main(int argc, char *argv[]){
 		};
 
 	} else if (cfg.op_type == IB_OP_RD) {
+		int rc;
 		if (cfg.server_name) {
 			/* read contens of server's buffer */
-			if (post_send(&res, IBV_WR_RDMA_READ))
+			if (post_send(IBV_WR_RDMA_READ))
 			{
-				fprintf(stderr, "failed to post SR 2\n");
-				rc = 1;
-				goto main_exit;
+				fprintf(stderr, "failed to post SR read\n");
+				return -1;
 			}
-			if (poll_completion(&res))
+			if (poll_completion())
 			{
-				fprintf(stderr, "poll completion failed 2\n");
-				rc = 1;
-				goto main_exit;
+				fprintf(stderr, "poll completion failed read\n");
+				return -1;
 			}
 			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
 		}
