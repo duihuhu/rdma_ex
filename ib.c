@@ -212,6 +212,7 @@ int init_ib()
 		fprintf(stdout, "alloc mr failed\n");
 		goto init_ib_exit;
 	}
+	memset (ib_res.ib_buf, 'T', res.ib_buf_size);
 	int rc;
 	rc = ibv_query_device(res.ctx, &res.dev_attr);
 	if (rc) {
