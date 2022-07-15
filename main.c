@@ -18,7 +18,7 @@ struct Config cfg = {
 	7000, /* tcp_port */
 	1, 	/*size */
 	1,  /*threads */
-	NULL, /* op type */
+	"SR", /* op type */
 };
 
 void init_config();
@@ -43,7 +43,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, " -d, --ib-dev <dev> use IB device <dev> (default first device found)\n");
 	fprintf(stdout, " -s, --msg-size  (default 1 alloc numbers of page)\n");
 	fprintf(stdout, " -t, --threads (defulat 1)\n");
-	fprintf(stdout, " -o, --op-type (default type send/recv)")
+	fprintf(stdout, " -o, --op-type (default type send/recv)");
 }
 
 void init_config(int argc, char *argv[])
