@@ -39,5 +39,7 @@ struct QpInfo {
 extern struct Resource res;
 
 int init_ib();
+static int post_send(int opcode);
+static int poll_completion();
 
 #endif /*ib.h*/
