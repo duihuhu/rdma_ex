@@ -9,8 +9,10 @@
 #include <string.h>
 #include <getopt.h>
 #include <stdlib.h>
+#include "sock.h"
 #include "config.h"
 #include "ib.h"
+#include "server.h"
 
 struct Config cfg = {
 	NULL, /* dev_name */
@@ -33,12 +35,13 @@ int main(int argc, char *argv[]){
 	}
     res = malloc(cfg.num_threads * sizeof(struct Resource));
     sockfd = init_socket();
+
     if (sockfd < 0) {
         fprintf(stdout, "init socket failed\n");
         return 0;
     }
     if (cfg.server_name) {
-        run_client(&res, sockfd);
+        // run_client(&res, sockfd);
     } else {
         run_server(&res, sockfd)
     }
