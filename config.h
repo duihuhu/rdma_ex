@@ -8,6 +8,7 @@
 #define CONFIG_H_
 #include <stdbool.h>
 #include <stdint.h>
+#include "ib.h"
 struct Config {
 	char	*server_name;
 	char	*dev_name;
@@ -18,7 +19,11 @@ struct Config {
 };
 extern struct Config cfg;
 
-
+struct MulArgs {
+	struct Resource *res;
+	int sockfd;
+	int thread_id;
+};
 
 
 #endif /*config.h*/

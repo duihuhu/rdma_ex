@@ -4,7 +4,7 @@ INCLUDES=
 LDFLAGS=-libverbs
 LIBS=-pthread -lrdmacm
 
-SRCS=main.c ib.c sock.c
+SRCS=main.c ib.c sock.c server.c client.c
 OBJS=$(SRCS:.c=.o)
 PROG=rdma-init
 

@@ -33,6 +33,7 @@ int socket_connect(struct Resource *res, char *server_name, uint32_t tcp_port)
 	int ret;
 	int sockfd = -1;
 	char port[10];
+	int listenfd;
 	if (sprintf(port, "%d", tcp_port)<0) {
 		fprintf(stdout, "port cast failed\n");
 		return -1;
@@ -56,7 +57,7 @@ int socket_connect(struct Resource *res, char *server_name, uint32_t tcp_port)
 					fprintf (stdout, "listen failed\n");
 					return -1;
 				}
-				res->sockfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
+				listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
 				if (res->sockfd < 0) {
 					fprintf( stdout, "accept failed\n");
 					 return -1;
@@ -67,12 +68,12 @@ int socket_connect(struct Resource *res, char *server_name, uint32_t tcp_port)
 					close(sockfd);
 					return  - 1; 
 				}
-				res->sockfd = sockfd;
+				listenfd = sockfd;
 			}
 		}
 	}
 	free(addr_res);
-	return sockfd;
+	return listenfd;
 
 }
 int sock_read(int sockfd, void *buffer, int len)
@@ -112,4 +113,23 @@ int sock_write(int sockfd, void *buffer, int len)
 		buf += w_bytes;
 	}
 	return 0;
+}
+
+int init_socket()
+{
+	int sockfd;
+	if (!cfg.server_name) {
+		sockfd = socket_connect(NULL, cfg.tcp_port);
+		if (ret < 0) {
+			fprintf(stdout, "failed to establish server\n");
+			return ret;
+		}
+	} else {
+		sockfd = socket_connect(cfg.server_name, cfg.tcp_port);
+		if (ret < 0) {
+			fprintf(stdout, "failed to establish connect\n");
+			return ret;
+		}
+	}
+	return sockfd;
 }

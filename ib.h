@@ -17,6 +17,15 @@
 #define IB_OP_RD	"READ"
 #define IB_OP_WR	"WRITE"
 #define IB_OP_CAS	"CAS"
+
+struct QpInfo {
+	uint16_t lid;
+	uint32_t qp_num;
+	uint32_t rkey;
+	uint64_t raddr;
+	long	thread_id;
+};
+
 struct Resource {
 	struct	ibv_context	*ctx;
 	struct	ibv_pd	*pd;
@@ -30,12 +39,8 @@ struct Resource {
 	int		sockfd;
 	uint32_t	rkey;
 	uint64_t	raddr;
-};
-struct QpInfo {
-	uint16_t lid;
-	uint32_t qp_num;
-	uint32_t rkey;
-	uint64_t raddr;
+	struct QpInfo qpinfo;
+	
 };
 // extern struct Resource res;
 

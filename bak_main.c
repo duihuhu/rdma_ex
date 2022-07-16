@@ -23,27 +23,65 @@ struct Config cfg = {
 int init_config();
 
 int main(int argc, char *argv[]){
-	struct Resource *res;
+	struct Resource res;
 	int ret = 0;
-    int sockfd;
 	ret = init_config(argc, argv);
 	if (ret == -1){
 		fprintf(stdout, "re init config \n");
 		return 0;
 	}
-    res = malloc(cfg.num_threads * sizeof(struct Resource));
-    sockfd = init_socket();
-    if (sockfd < 0) {
-        fprintf(stdout, "init socket failed\n");
-        return 0;
-    }
-    if (cfg.server_name) {
-        run_client(&res, sockfd);
-    } else {
-        run_server(&res, sockfd)
-    }
-	ret = init_ib(&res, sockfd);
 
+
+	ret = init_ib(&res);
+
+	if (ret == -1) {
+		fprintf(stdout,"init ib devices failed\n");
+		return 0;
+	}
+
+	if (!strcmp(cfg.op_type, IB_OP_SR)) {
+		if (!cfg.server_name) {
+			return 0;
+		};
+
+	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
+		if (cfg.server_name) {
+			ck_cs_wire(&res);
+			/* read contens of server's buffer */
+			if (post_send(&res, IBV_WR_RDMA_READ))
+			{
+				fprintf(stderr, "failed to post SR read\n");
+				return -1;
+			}
+			if (poll_completion(&res))
+			{
+				fprintf(stderr, "poll completion failed read\n");
+				return -1;
+			}
+			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
+		} else {
+			strcpy(res.ib_buf, "R");
+			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			ck_cs_wire(&res);
+		}
+
+	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
+		if (cfg.server_name) {
+			memset(res.ib_buf, 'W', res.ib_buf_size);
+			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			if (post_send(&res, IBV_WR_RDMA_WRITE))
+			{
+				fprintf(stderr, "failed to post SR 3\n");
+				return -1;
+			}
+			if (poll_completion(&res))
+			{
+				fprintf(stderr, "poll completion failed 3\n");
+				return -1;
+			}
+			fprintf(stdout, "Contents of server's write buffer: '%s'\n", res.ib_buf);
+		}
+	}
 
 	return 0;
 }

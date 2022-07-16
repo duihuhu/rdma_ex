@@ -261,19 +261,7 @@ int init_ib(struct Resource *res)
 	fprintf(stdout, "QP created , QP number=0x%x\n", res->qp->qp_num);
 
 	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res->ib_buf, res->mr->lkey, res->mr->rkey, mflags);
-	if (!cfg.server_name) {
-		ret = socket_connect(res, NULL, cfg.tcp_port);
-		if (ret < 0) {
-			fprintf(stdout, "failed to establish server\n");
-			goto init_ib_exit;
-		}
-	} else {
-		ret = socket_connect(res, cfg.server_name, cfg.tcp_port);
-		if (ret < 0) {
-			fprintf(stdout, "failed to establish connect\n");
-			goto init_ib_exit;
-		}
-	}
+
 	ret = ex_qp_info(res);
 	if (ret < 0) {
 		fprintf(stdout, "failed ex qp info\n");
