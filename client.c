@@ -18,7 +18,7 @@ void *client_func(void *mul_args) {
     return 0;
 }
 
-int run_client(struct Resource *res, struct addrinfo *addr_res)
+int run_client(struct Resource *res, struct addrinfo *ad)
 {
     int ret = 0;
     long i = 0;
@@ -36,6 +36,28 @@ int run_client(struct Resource *res, struct addrinfo *addr_res)
     threads = (pthread_t *) calloc(cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)
         fprintf(stderr,  "Failed to allocate threads.");
+
+
+    struct addrinfo hints = {
+		.ai_family = AF_INET,
+		.ai_socktype = SOCK_STREAM,
+		.ai_flags = AI_PASSIVE
+	};
+	struct addrinfo *addr_res=NULL, *rp=NULL;
+	// struct addrinfo *addr_res=NULL, *ap;
+
+	int ret;
+	char port[10];
+	// int listenfd = -1;
+	if (sprintf(port, "%d", cfg.tcp_port)<0) {
+		fprintf(stdout, "port cast failed\n");
+		return -1;
+	}
+	ret = getaddrinfo(cfg.server_name, port, &hints, &addr_res);
+	if (ret) {
+		fprintf(stdout, "getaddrinfo failed\n");
+		return -1;
+	}
 
     for (i = 0; i < cfg.num_threads; i++) {
         int sockfd = -1;
