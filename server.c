@@ -26,16 +26,17 @@ int run_server (struct Resource *res, int sockfd)
     threads = (pthread_t *) calloc (cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)
         fprintf(stderr,  "Failed to allocate threads.");
-
+    
+    struct sockaddr_in c_addr;
+    int listenfd;
+    socklen_t c_addr_len = sizeof(struct sockaddr_in);
     while (1) {
-        int listenfd;
-        struct sockaddr_in c_addr;
-        socklen_t c_addr_len = sizeof(struct sockaddr_in);
     	listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
 		if (listenfd < 0) {
 			fprintf( stdout, "accept failed\n");
 			return -1;
 		}
+        mul_args[i].sockfd = listenfd;
         if((pthread_create(&threads[i], NULL, server_func, (void *)&mul_args[i])) == -1){
 			printf("create error!\n");
 		}
