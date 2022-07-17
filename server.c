@@ -5,6 +5,7 @@
 #include "config.h"
 #include "ib.h"
 void *server_func(void *mul_args){
+    fprintf(stdout, "server running %l", mul_args->thread_id);
     return 0;
 }
 
