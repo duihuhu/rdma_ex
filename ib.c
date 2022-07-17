@@ -387,7 +387,7 @@ int post_receive(struct Resource *res)
 	int rc;
 	/* prepare the scatter/gather entry */
 	memset(&sge, 0, sizeof(sge));
-	sge.addr = (uintptr_t)res->buf;
+	sge.addr = (uintptr_t)res->ib_buf;
 	sge.length = res->ib_buf_size;
 	sge.lkey = res->mr->lkey;
 	/* prepare the receive work request */
@@ -418,9 +418,9 @@ int com_op(struct Resource *res)
 			if (poll_completion(res))
 			{
 				fprintf(stderr, "poll completion failed\n");
-				goto main_exit;
+				return -1;
 			}
-			fprintf(stdout, "Message is: '%s'\n", res->buf);
+			fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
 			strcpy(res->ib_buf, "S");
 			ck_cs_wire(res);
@@ -431,8 +431,10 @@ int com_op(struct Resource *res)
 			if (poll_completion(res))
 			{
 				fprintf(stderr, "poll completion failed\n");
-				goto main_exit;
+				return -1;
 			}
+			fprintf(stdout, "Client Message is: '%s'\n", res->ib_buf);
+
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
