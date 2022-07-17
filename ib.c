@@ -332,6 +332,10 @@ int poll_completion(struct Resource *res)
 			in_data = ntohl(wc.imm_data);
 			fprintf(stdout, "inline data 0x%x\n", in_data);
 		}
+		if (cfg.server_name && (!strcmp(cfg.op_type, IB_OP_CAS))) {
+			uint64_t swap = wr.wr.atomic.swap;
+			fprintf(stdout, "inline data ld\n", swap);
+		}
 			
 	}
 	return rc;
@@ -362,6 +366,11 @@ int post_send(struct Resource *res, int opcode)
 		sr.wr.rdma.rkey = res->rkey;
 		if (opcode == IBV_WR_RDMA_WRITE_WITH_IMM) 
 			sr.imm_data   = htonl(0x1234);
+		if (opcode == IBV_WR_ATOMIC_FETCH_AND_ADD) {
+			wr.wr.atomic.compare_add = 0ULL; /* expected value in remote address */
+			wr.wr.atomic.swap        = 1ULL; /* the value that remote address will be assigned to */
+
+		}
 	}
 
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
@@ -383,6 +392,9 @@ int post_send(struct Resource *res, int opcode)
 			break;
 		case IBV_WR_RDMA_WRITE_WITH_IMM:
 			fprintf(stdout, "RDMA IM Write Request was posted\n");
+			break;
+		case IBV_WR_ATOMIC_FETCH_AND_ADD:
+			fprintf(stdout, "RDMA CAS Request was posted\n");
 			break;
 		default:
 			fprintf(stdout, "Unknown Request was posted\n");
@@ -511,6 +523,19 @@ int com_op(struct Resource *res)
 				return -1;
 			}
 			fprintf(stdout, "Contents of client's write buffer: '%s'\n", res->ib_buf);
+		}
+	} else if (!strcmp(cfg.op_type, IB_OP_CAS)) {
+		if (cfg.server_name) {
+			if (post_send(res, IBV_WR_ATOMIC_FETCH_AND_ADD))
+			{
+				fprintf(stderr, "failed to post SR\n");
+				return -1;
+			}
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed\n");
+				return -1;
+			}
 		}
 	}
 	return 0;
