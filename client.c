@@ -61,7 +61,7 @@ int run_client(struct Resource *res, struct addrinfo *ad)
         struct addrinfo *rp;
         for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
 		    sockfd[i] = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-            if (sockfd >= 0) {
+            if (sockfd[i] >= 0) {
                 if (connect(sockfd[i], rp->ai_addr, rp->ai_addrlen)<0) {
                     fprintf(stdout, "client connect failed\n");
                     close(sockfd[i]);

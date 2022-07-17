@@ -176,7 +176,7 @@ int init_ib(struct Resource *res)
 	struct ibv_device	**ibv_devices = NULL;
 	struct ibv_device	*ib_dev = NULL;
 	int num_devices;
-	resource_init(res);
+	// resource_init(res);
 	ibv_devices = ibv_get_device_list(&num_devices);
 	if (!num_devices) {
 		fprintf(stdout, "no device\n");

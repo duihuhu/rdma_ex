@@ -66,7 +66,7 @@ int run_server (struct Resource *res)
             if (listen(sockfd,5) ==-1) {
 					fprintf (stdout, "listen failed\n");
 					return -1;
-				}
+			}
         } else
             return -1;
     }
