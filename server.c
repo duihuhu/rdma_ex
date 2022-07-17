@@ -6,7 +6,7 @@
 #include "ib.h"
 void *server_func(void *mul_args){
     struct MulArgs *args;
-    args = (* struct MulArgs) mul_args;
+    args = (struct MulArgs *) mul_args;
     fprintf(stdout, "server running %l", args->thread_id);
     return 0;
 }
