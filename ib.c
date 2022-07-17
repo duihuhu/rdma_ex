@@ -237,7 +237,7 @@ int init_ib(struct Resource *res)
 	}
 	memset(res->ib_buf, 0, res->ib_buf_size);
 	int mflags = 0;
-	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE;
+	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE |IBV_ACCESS_REMOTE_ATOMIC;
 	res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
 	if (!res->mr) {
 		fprintf(stdout, "alloc mr failed\n");
