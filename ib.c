@@ -379,12 +379,48 @@ int post_send(struct Resource *res, int opcode)
 	return rc;
 }
 
+int post_receive(struct Resource *res)
+{
+	struct ibv_recv_wr rr;
+	struct ibv_sge sge;
+	struct ibv_recv_wr *bad_wr;
+	int rc;
+	/* prepare the scatter/gather entry */
+	memset(&sge, 0, sizeof(sge));
+	sge.addr = (uintptr_t)res->buf;
+	sge.length = res->ib_buf_size;
+	sge.lkey = res->mr->lkey;
+	/* prepare the receive work request */
+	memset(&rr, 0, sizeof(rr));
+	rr.next = NULL;
+	rr.wr_id = 0;
+	rr.sg_list = &sge;
+	rr.num_sge = 1;
+	/* post the Receive Request to the RQ */
+	rc = ibv_post_recv(res->qp, &rr, &bad_wr);
+	if (rc)
+		fprintf(stderr, "failed to post RR\n");
+	else
+		fprintf(stdout, "Receive Request was posted\n");
+	return rc;
+}
+
 int com_op(struct Resource *res)
 {
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
-		if (!cfg.server_name) {
-			return 0;
-		};
+		if (cfg.server_name) {
+			if (post_receive(res)) {
+				fprintf(stderr, "client failed to recv rr\n");
+				return -1;
+			}
+			ck_cs_wire(res);
+		} else {
+			ck_cs_wire(res);
+			if (post_send(res, IBV_WR_SEND)) {
+				fprintf(stderr,  "server failed to post sr\n");
+				return -1;
+			}
+		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
 			ck_cs_wire(res);
