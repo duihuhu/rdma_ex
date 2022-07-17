@@ -26,16 +26,18 @@ int run_server (struct Resource *res, int sockfd)
     threads = (pthread_t *) calloc (cfg.num_threads, sizeof(pthread_t));
     check (threads != NULL, "Failed to allocate threads.");
 
-    for (i = 0; i < num_threads; i++) {
+    for (i = 0; i < cfg.num_threads; i++) {
         mul_args.thread_id = i;
         ret = pthread_create (&threads[i], &attr, server_func, (void *)&mul_args);
-        check (ret == 0, "Failed to create server_thread[%ld]", i);
+        if (ret == 0) 
+            fprintf(stderr, "Failed to create server_thread[%ld]", i);
     }
 
     bool thread_ret_normally = true;
     for (i = 0; i < num_threads; i++) {
         ret = pthread_join (threads[i], &status);
-        check (ret == 0, "Failed to join thread[%ld].", i);
+        if (ret == 0) 
+            fprintf(stderr, "Failed to join thread[%ld].", i);
         if ((long)status != 0) {
             thread_ret_normally = false;
             fprintf(stdout, "server_thread[%ld]: failed to execute", i);
