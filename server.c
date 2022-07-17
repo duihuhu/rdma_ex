@@ -23,8 +23,8 @@ int run_server (struct Resource *res, int sockfd)
     struct MulArgs *mul_args;
     mul_args = malloc(cfg.num_threads * sizeof(struct MulArgs));
         
-    pthread_attr_init (&attr);
-    pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     threads = (pthread_t *) calloc (cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)

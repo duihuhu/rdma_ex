@@ -7,7 +7,7 @@
 void *client_func(void *mul_args) {
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    fprintf(stdout, "client running thread_id %d", args->thread_id);
+    fprintf(stdout, "client running thread_id %d\n", args->thread_id);
     return 0;
 }
 
