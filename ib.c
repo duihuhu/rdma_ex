@@ -483,7 +483,7 @@ int com_op(struct Resource *res)
 	} else if (!strcmp(cfg.op_type, IB_OP_WI)) {
 		if (cfg.server_name) {
 			ck_cs_wire(res);
-			strcpy(res->ib_buf, "WI");
+			strcpy(res->ib_buf, "I");
 			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			if (post_send(res, IBV_WR_RDMA_WRITE_WITH_IMM))
 			{
