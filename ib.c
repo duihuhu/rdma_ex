@@ -330,7 +330,7 @@ int poll_completion(struct Resource *res)
 		{
 			uint32_t in_data;
 			in_data = ntohl(wc.imm_data);
-			fprintf(stdout, "inline data %ld\n", in_data);
+			fprintf(stdout, "inline data %0x08x\n", in_data);
 		}
 			
 	}
