@@ -38,7 +38,7 @@ int run_client(struct Resource *res, struct addrinfo *addr_res)
         fprintf(stderr,  "Failed to allocate threads.");
 
     for (i = 0; i < cfg.num_threads; i++) {
-        int sockfd;
+        int sockfd = -1;
         struct addrinfo *rp;
         for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
 		    sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
