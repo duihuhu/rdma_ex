@@ -66,6 +66,7 @@ struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port)
 			// 	}
 			// 	listenfd = sockfd;
 			// }
+			close(sockfd);
 			break;
 		}
 	}
