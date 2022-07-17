@@ -35,7 +35,7 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 	int ret;
 	int sockfd = -1;
 	char port[10];
-	int listenfd;
+	int listenfd = -1;
 	if (sprintf(port, "%d", tcp_port)<0) {
 		fprintf(stdout, "port cast failed\n");
 		return -1;
