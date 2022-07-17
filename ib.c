@@ -371,6 +371,9 @@ int post_send(struct Resource *res, int opcode)
 		case IBV_WR_RDMA_WRITE:
 			fprintf(stdout, "RDMA Write Request was posted\n");
 			break;
+		case IBV_WR_RDMA_WRITE_WITH_IMM:
+			fprintf(stdout, "RDMA Write Request was posted\n");
+			break;
 		default:
 			fprintf(stdout, "Unknown Request was posted\n");
 			break;
@@ -464,13 +467,32 @@ int com_op(struct Resource *res)
 				fprintf(stderr, "failed to post SR 3\n");
 				return -1;
 			}
+			ck_cs_wire(res);
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed 3\n");
+				return -1;
+			}
+		} else {
+			ck_cs_wire(res);
+			fprintf(stdout, "Contents of server's write buffer: '%s'\n", res->ib_buf);
+		}
+	} else if (!strcmp(cfg.op_type, IB_OP_WI)) {
+		if (cfg.server_name) {
+			memset(res->ib_buf, 'WI', res->ib_buf_size);
+			fprintf(stdout, "res buf %s\n", res->ib_buf);
+			if (post_send(res, IBV_WR_RDMA_WRITE_WITH_IMM))
+			{
+				fprintf(stderr, "failed to post SR 3\n");
+				return -1;
+			}
 			if (poll_completion(res))
 			{
 				fprintf(stderr, "poll completion failed 3\n");
 				return -1;
 			}
 			fprintf(stdout, "Contents of server's write buffer: '%s'\n", res->ib_buf);
-		}
+		} 
 	}
 	return 0;
 }

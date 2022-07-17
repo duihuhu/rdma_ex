@@ -16,6 +16,7 @@
 #define IB_OP_SR	"SR"
 #define IB_OP_RD	"READ"
 #define IB_OP_WR	"WRITE"
+#define IB_OP_WI	"IWRITE"
 #define IB_OP_CAS	"CAS"
 
 struct QpInfo {
