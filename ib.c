@@ -433,8 +433,6 @@ int com_op(struct Resource *res)
 				fprintf(stderr, "poll completion failed\n");
 				return -1;
 			}
-			fprintf(stdout, "Client Message is: '%s'\n", res->ib_buf);
-
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
