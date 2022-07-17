@@ -24,7 +24,7 @@ uint64_t ntohll(uint64_t n)
 	return (((uint64_t)ntohl(n))<<32) | ntohl(n>>32);
 }
 
-int socket_connect(char *server_name, uint32_t tcp_port)
+struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port)
 {
 	struct addrinfo hints = {
 		.ai_family = AF_INET,
@@ -35,7 +35,7 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 	int ret;
 	int sockfd = -1;
 	char port[10];
-	int listenfd = -1;
+	// int listenfd = -1;
 	if (sprintf(port, "%d", tcp_port)<0) {
 		fprintf(stdout, "port cast failed\n");
 		return -1;
@@ -119,13 +119,13 @@ struct addrinfo* init_socket()
 	struct addrinfo *rp = NULL;
 	if (!cfg.server_name) {
 		rp = socket_connect(NULL, cfg.tcp_port);
-		if (sockfd < 0) {
+		if (!rp) {
 			fprintf(stdout, "failed to establish server\n");
 			return rp;
 		}
 	} else {
 		rp = socket_connect(cfg.server_name, cfg.tcp_port);
-		if (sockfd < 0) {
+		if (!rp) {
 			fprintf(stdout, "failed to establish connect\n");
 			return rp;
 		}
