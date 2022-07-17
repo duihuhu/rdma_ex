@@ -409,16 +409,29 @@ int com_op(struct Resource *res)
 {
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (cfg.server_name) {
+			strcpy(res->ib_buf, "C");
 			if (post_receive(res)) {
 				fprintf(stderr, "client failed to recv rr\n");
 				return -1;
 			}
 			ck_cs_wire(res);
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed\n");
+				goto main_exit;
+			}
+			fprintf(stdout, "Message is: '%s'\n", res->buf);
 		} else {
+			strcpy(res->ib_buf, "S");
 			ck_cs_wire(res);
 			if (post_send(res, IBV_WR_SEND)) {
 				fprintf(stderr,  "server failed to post sr\n");
 				return -1;
+			}
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed\n");
+				goto main_exit;
 			}
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
