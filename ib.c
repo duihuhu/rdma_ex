@@ -353,7 +353,10 @@ int post_send(struct Resource *res, int opcode)
 	{
 		sr.wr.rdma.remote_addr = res->raddr;
 		sr.wr.rdma.rkey = res->rkey;
+		if (opcode == IBV_WR_RDMA_WRITE_WITH_IMM) 
+			sr.imm_data   = htonl(0x1234);
 	}
+
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	if (rc)
@@ -479,6 +482,7 @@ int com_op(struct Resource *res)
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_WI)) {
 		if (cfg.server_name) {
+			ck_cs_wire(res);
 			strcpy(res->ib_buf, "WI");
 			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			if (post_send(res, IBV_WR_RDMA_WRITE_WITH_IMM))
@@ -491,8 +495,11 @@ int com_op(struct Resource *res)
 				fprintf(stderr, "poll completion failed 3\n");
 				return -1;
 			}
-			fprintf(stdout, "Contents of server's write buffer: '%s'\n", res->ib_buf);
-		} 
+		} else {
+			post_receive(res);
+			ck_cs_wire(res);
+			fprintf(stdout, "Contents of client's write buffer: '%s'\n", res->ib_buf);
+		}
 	}
 	return 0;
 }
