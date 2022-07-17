@@ -28,7 +28,6 @@ int init_config();
 int main(int argc, char *argv[]){
 	struct Resource *res;
 	int ret = 0;
-    int sockfd;
 	struct addrinfo *rp = NULL;
 	ret = init_config(argc, argv);
 	if (ret == -1){
