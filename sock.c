@@ -49,8 +49,6 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 		if (sockfd >= 0) {
 			if (!server_name) {
-				struct sockaddr_in c_addr;
-				socklen_t c_addr_len = sizeof(struct sockaddr_in);
 				if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
 					fprintf(stdout, "server bind failed\n");
 					return -1;
@@ -59,11 +57,7 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 					fprintf (stdout, "listen failed\n");
 					return -1;
 				}
-				listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
-				if (listenfd < 0) {
-					fprintf( stdout, "accept failed\n");
-					 return -1;
-				}
+				listenfd = sockfd;
 			} else { 
 				if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
 					fprintf(stdout, "client connect failed\n");
