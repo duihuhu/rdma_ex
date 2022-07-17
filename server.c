@@ -25,7 +25,7 @@ int run_server (struct Resource *res, int sockfd)
 
     threads = (pthread_t *) calloc (cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)
-        fprintf(stderr,  "Failed to allocate threads.")
+        fprintf(stderr,  "Failed to allocate threads.");
     for (i = 0; i < cfg.num_threads; i++) {
         mul_args.thread_id = i;
         ret = pthread_create (&threads[i], &attr, server_func, (void *)&mul_args);
