@@ -43,9 +43,9 @@ int main(int argc, char *argv[]){
     if (cfg.server_name) {
         // run_client(&res, sockfd);
     } else {
-        run_server(&res, sockfd)
+        run_server(res, sockfd);
     }
-	ret = init_ib(&res, sockfd);
+	// ret = init_ib(res, sockfd);
 
 
 	return 0;
