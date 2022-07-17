@@ -1,5 +1,6 @@
 #include "server.h"
 #include <pthread.h>
+#include <stdlib.h>
 #include "config.h"
 #include "ib.h"
 int server_func(void *mul_args){
@@ -36,7 +37,7 @@ int run_server (struct Resource *res, int sockfd)
         check (ret == 0, "Failed to join thread[%ld].", i);
         if ((long)status != 0) {
             thread_ret_normally = false;
-            log ("server_thread[%ld]: failed to execute", i);
+            fprintf(stdout, "server_thread[%ld]: failed to execute", i);
         }
     }
 
@@ -51,7 +52,7 @@ int run_server (struct Resource *res, int sockfd)
 
  error:
     if (threads != NULL) {
-        free (threads);
+        free(threads);
     }
     pthread_attr_destroy    (&attr);
     
