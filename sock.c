@@ -23,6 +23,7 @@ uint64_t ntohll(uint64_t n)
 {
 	return (((uint64_t)ntohl(n))<<32) | ntohl(n>>32);
 }
+
 int socket_connect(char *server_name, uint32_t tcp_port)
 {
 	struct addrinfo hints = {
@@ -59,7 +60,7 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 					return -1;
 				}
 				listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
-				if (res->sockfd < 0) {
+				if (listenfd < 0) {
 					fprintf( stdout, "accept failed\n");
 					 return -1;
 				}
@@ -122,15 +123,15 @@ int init_socket()
 	int sockfd;
 	if (!cfg.server_name) {
 		sockfd = socket_connect(NULL, cfg.tcp_port);
-		if (ret < 0) {
+		if (sockfd < 0) {
 			fprintf(stdout, "failed to establish server\n");
-			return ret;
+			return sockfd;
 		}
 	} else {
 		sockfd = socket_connect(cfg.server_name, cfg.tcp_port);
-		if (ret < 0) {
+		if (sockfd < 0) {
 			fprintf(stdout, "failed to establish connect\n");
-			return ret;
+			return sockfd;
 		}
 	}
 	return sockfd;
