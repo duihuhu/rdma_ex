@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
         return 0;
     }
     if (cfg.server_name) {
-        // run_client(&res, sockfd);
+        run_client(res, sockfd);
     } else {
         run_server(res, sockfd);
     }
