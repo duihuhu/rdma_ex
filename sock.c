@@ -40,12 +40,12 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 	// int listenfd = -1;
 	if (sprintf(port, "%d", tcp_port)<0) {
 		fprintf(stdout, "port cast failed\n");
-		return rp;
+		return -1;
 	}
 	ret = getaddrinfo(server_name, port, &hints, &addr_res);
 	if (ret) {
 		fprintf(stdout, "getaddrinfo failed\n");
-		return rp;
+		return -1;
 	}
 	for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
 		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
@@ -119,7 +119,6 @@ int sock_write(int sockfd, void *buffer, int len)
 
 int init_socket(struct addrinfo *rp)
 {
-	struct addrinfo *rp = NULL;
 	int ret;
 	if (!cfg.server_name) {
 		ret = socket_connect(NULL, cfg.tcp_port, rp);
