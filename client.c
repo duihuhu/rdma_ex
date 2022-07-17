@@ -8,7 +8,7 @@ void *client_func(void *mul_args) {
     int ret;
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    ret = init_ib(args->res);
+    ret = init_ib(args->res, args->thread_id);
     if (ret < 0) {
         fprintf(stderr, "client thread %d faild init ib\n", args->thread_id);
         return (void*)-1;
@@ -36,6 +36,7 @@ int run_client(struct Resource *res, int sockfd)
         fprintf(stderr,  "Failed to allocate threads.");
 
     for (i = 0; i < cfg.num_threads; i++) {
+        res[i].sockfd = sockfd;
         mul_args[i].res = &res[i];
         mul_args[i].sockfd = sockfd;
         mul_args[i].thread_id = i;
