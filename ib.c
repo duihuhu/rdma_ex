@@ -487,12 +487,12 @@ int com_op(struct Resource *res)
 			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			if (post_send(res, IBV_WR_RDMA_WRITE_WITH_IMM))
 			{
-				fprintf(stderr, "failed to post SR 3\n");
+				fprintf(stderr, "failed to post SR\n");
 				return -1;
 			}
 			if (poll_completion(res))
 			{
-				fprintf(stderr, "poll completion failed 3\n");
+				fprintf(stderr, "poll completion failed\n");
 				return -1;
 			}
 		} else {
