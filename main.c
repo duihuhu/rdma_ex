@@ -13,6 +13,7 @@
 #include "config.h"
 #include "ib.h"
 #include "server.h"
+#include "client.h"
 
 struct Config cfg = {
 	NULL, /* dev_name */
