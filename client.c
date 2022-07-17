@@ -6,7 +6,7 @@
 
 void *client_func(void *mul_args) {
     struct MulArgs *args;
-    args = (struct MulArgs *) mul_args
+    args = (struct MulArgs *) mul_args;
     fprintf(stdout, "client running thread_id %d", args.thread_id);
     return 0;
 }
@@ -26,7 +26,7 @@ int run_client(struct Resource *res, int sockfd)
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-    threads = (phtread_t *) calloc(cfg.num_threads, sizeof(pthread_t));
+    threads = (pthread_t *) calloc(cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)
         fprintf(stderr,  "Failed to allocate threads.");
 
