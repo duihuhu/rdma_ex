@@ -23,7 +23,6 @@ struct QpInfo {
 	uint32_t qp_num;
 	uint32_t rkey;
 	uint64_t raddr;
-	long	tid;
 };
 
 struct Resource {

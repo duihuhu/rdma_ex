@@ -30,7 +30,8 @@ int run_server (struct Resource *res)
         fprintf(stderr,  "Failed to allocate threads.");
     
     struct sockaddr_in c_addr;
-    int listenfd;
+    int *listenfd;
+    listenfd = malloc(cfg.num_threads * sizeof(int));
     socklen_t c_addr_len = sizeof(struct sockaddr_in);
     int sockfd = -1;
 
@@ -71,13 +72,13 @@ int run_server (struct Resource *res)
     }
 
     while (1) {
-    	listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
-		if (listenfd < 0) {
+    	listenfd[i] = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
+		if (listenfd[i] < 0) {
 			fprintf( stdout, "accept failed\n");
 			return -1;
 		}
-        res[i].sockfd = listenfd;
-        mul_args[i].sockfd = listenfd;
+        res[i].sockfd = listenfd[i];
+        mul_args[i].sockfd = listenfd[i];
         mul_args[i].res = &res[i];
         mul_args[i].thread_id = i;
         if((pthread_create(&threads[i], NULL, server_func, (void *)&mul_args[i])) == -1){

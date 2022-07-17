@@ -55,12 +55,12 @@ int run_client(struct Resource *res, struct addrinfo *ad)
 		fprintf(stdout, "getaddrinfo failed\n");
 		return -1;
 	}
-
+    int *sockfd;
+    sockfd = malloc(cfg.num_threads * sizeof(int));
     for (i = 0; i < cfg.num_threads; i++) {
-        int sockfd = -1;
         struct addrinfo *rp;
         for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
-		    sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+		    sockfd[i] = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
             if (sockfd >= 0) {
                 if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
                     fprintf(stdout, "client connect failed\n");
@@ -70,9 +70,9 @@ int run_client(struct Resource *res, struct addrinfo *ad)
             } else
                 return -1;
         }
-        res[i].sockfd = sockfd;
+        res[i].sockfd = sockfd[i];
         mul_args[i].res = &res[i];
-        mul_args[i].sockfd = sockfd;
+        mul_args[i].sockfd = sockfd[i];
         mul_args[i].thread_id = i;
         ret = pthread_create(&threads[i], &attr, client_func, (void *)&mul_args[i]);
         if (ret != 0) 
