@@ -19,7 +19,6 @@ int run_server (struct Resource *res, int sockfd)
     pthread_t           *threads = NULL;
     pthread_attr_t       attr;
     void                *status;
-    memset(&mul_args, 0, sizeof(struct MulArgs));
 
     pthread_attr_init (&attr);
     pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_JOINABLE);
@@ -29,6 +28,7 @@ int run_server (struct Resource *res, int sockfd)
         fprintf(stderr,  "Failed to allocate threads.");
     for (i = 0; i < cfg.num_threads; i++) {
         struct MulArgs mul_args;
+        memset(&mul_args, 0, sizeof(struct MulArgs));
         mul_args.res = res;
         mul_args.sockfd = sockfd;
         mul_args.thread_id = i;
