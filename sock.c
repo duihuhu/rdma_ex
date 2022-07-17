@@ -31,19 +31,19 @@ struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port)
 		.ai_socktype = SOCK_STREAM,
 		.ai_flags = AI_PASSIVE
 	};
-	struct addrinfo *addr_res=NULL, *rp;
+	struct addrinfo *addr_res=NULL, *rp=NULl;
 	int ret;
 	int sockfd = -1;
 	char port[10];
 	// int listenfd = -1;
 	if (sprintf(port, "%d", tcp_port)<0) {
 		fprintf(stdout, "port cast failed\n");
-		return -1;
+		return rp;
 	}
 	ret = getaddrinfo(server_name, port, &hints, &addr_res);
 	if (ret) {
 		fprintf(stdout, "getaddrinfo failed\n");
-		return -1;
+		return rp;
 	}
 	for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
 		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
@@ -115,7 +115,6 @@ int sock_write(int sockfd, void *buffer, int len)
 
 struct addrinfo* init_socket()
 {
-	int sockfd;
 	struct addrinfo *rp = NULL;
 	if (!cfg.server_name) {
 		rp = socket_connect(NULL, cfg.tcp_port);
