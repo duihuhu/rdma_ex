@@ -19,7 +19,7 @@ void *server_func(void *mul_args){
     return 0;
 }
 
-int run_server (struct Resource *res, struct addrinfo *addr_res)
+int run_server (struct Resource *res, struct addrinfo *ad)
 {
     int i = 0;
     struct MulArgs *mul_args;
@@ -33,7 +33,28 @@ int run_server (struct Resource *res, struct addrinfo *addr_res)
     int listenfd;
     socklen_t c_addr_len = sizeof(struct sockaddr_in);
     int sockfd = -1;
-    struct addrinfo *rp;
+
+    struct addrinfo hints = {
+		.ai_family = AF_INET,
+		.ai_socktype = SOCK_STREAM,
+		.ai_flags = AI_PASSIVE
+	};
+	struct addrinfo *addr_res=NULL, *rp=NULL;
+	// struct addrinfo *addr_res=NULL, *ap;
+
+	int ret;
+	char port[10];
+	// int listenfd = -1;
+	if (sprintf(port, "%d", cfg.tcp_port)<0) {
+		fprintf(stdout, "port cast failed\n");
+		return -1;
+	}
+	ret = getaddrinfo(cfg.server_name, port, &hints, &addr_res);
+	if (ret) {
+		fprintf(stdout, "getaddrinfo failed\n");
+		return -1;
+	}
+
     for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
         sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
         if (sockfd >= 0) {
@@ -44,16 +65,6 @@ int run_server (struct Resource *res, struct addrinfo *addr_res)
         } else
             return -1;
     }
-
-    // sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    // if (sockfd >= 0) {
-    //     if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
-    //         fprintf(stdout, "server bind failed\n");
-    //         return -1;
-    //     }
-    // } else 
-    //     fprintf(stderr, "create socket fd failed\n");
-
 
     while (1) {
     	listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
