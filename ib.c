@@ -24,7 +24,6 @@ int get_qp_info(int sockfd, struct QpInfo *qp_info)
 	qp_info->qp_num = ntohl(tmp_qp_info.qp_num);
 	qp_info->rkey = ntohl(tmp_qp_info.rkey);
 	qp_info->raddr = ntohll(tmp_qp_info.raddr);
-	qp_info->tid = ntohl(tmp_qp_info.tid);
 	return 0;
 }
 int set_qp_info(int sockfd, struct QpInfo *qp_info)
@@ -35,7 +34,6 @@ int set_qp_info(int sockfd, struct QpInfo *qp_info)
 	tmp_qp_info.qp_num = qp_info->qp_num;
 	tmp_qp_info.rkey = qp_info->rkey;
 	tmp_qp_info.raddr = qp_info->raddr;
-	tmp_qp_info.tid = qp_info->tid;
 	ret = sock_write(sockfd, (char *)&tmp_qp_info, sizeof(struct QpInfo));
 	if (ret < 0) {
 		fprintf(stdout, "sock write failed\n");
@@ -116,7 +114,7 @@ int ck_cs_wire(struct Resource *res) {
 	return 0;
 }
 
-int ex_qp_info(struct Resource *res, long tid)
+int ex_qp_info(struct Resource *res)
 {
 	struct QpInfo local_info;
 	struct QpInfo remote_info;
@@ -125,7 +123,6 @@ int ex_qp_info(struct Resource *res, long tid)
 	local_info.qp_num = htonl(res->qp->qp_num);
 	local_info.rkey = htonl(res->mr->rkey);
 	local_info.raddr = htonll((uintptr_t)res->ib_buf);
-	local_info.tid = htonl(tid);
 	int ret;
 	if (!cfg.server_name) {
 
@@ -174,7 +171,7 @@ void resource_init(struct Resource *res)
 	memset(res, 0, sizeof *res);
 	res->sockfd = -1;
 }
-int init_ib(struct Resource *res, long tid)
+int init_ib(struct Resource *res)
 {
 	struct ibv_device	**ibv_devices = NULL;
 	struct ibv_device	*ib_dev = NULL;
@@ -265,7 +262,7 @@ int init_ib(struct Resource *res, long tid)
 
 	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res->ib_buf, res->mr->lkey, res->mr->rkey, mflags);
 
-	ret = ex_qp_info(res, tid);
+	ret = ex_qp_info(res);
 	if (ret < 0) {
 		fprintf(stdout, "failed ex qp info\n");
 		goto init_ib_exit;

@@ -44,7 +44,7 @@ struct Resource {
 };
 // extern struct Resource res;
 
-int init_ib(struct Resource *res, long tid);
+int init_ib(struct Resource *res);
 int ck_cs_wire(struct Resource *res);
 int post_send(struct Resource *res, int opcode);
 int poll_completion(struct Resource *res);

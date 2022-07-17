@@ -11,7 +11,7 @@ void *server_func(void *mul_args){
     int ret;
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    ret = init_ib(args->res, args->thread_id);
+    ret = init_ib(args->res);
     if (ret < 0) {
         fprintf(stderr, "server thread %d faild init ib\n", args->thread_id);
         return (void*)-1;
@@ -76,6 +76,7 @@ int run_server (struct Resource *res)
 			fprintf( stdout, "accept failed\n");
 			return -1;
 		}
+        res[i].sockfd = listenfd;
         mul_args[i].sockfd = listenfd;
         mul_args[i].res = &res[i];
         mul_args[i].thread_id = i;
