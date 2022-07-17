@@ -74,7 +74,7 @@ int init_config(int argc, char *argv[])
 			{.name = "port", .has_arg = 1, .val = 'p'},
 			{.name = "ib-dev", .has_arg = 1, .val = 'd'},
 			{.name = "msg-size", .has_arg = 1, .val = 's'},
-			{.name = "num_threads", .has_arg = 1, .val = 'c'},
+			{.name = "num_threads", .has_arg = 1, .val = 't'},
 			{.name = "op-type", .has_arg = 1, .val = 'o'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
