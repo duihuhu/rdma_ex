@@ -35,7 +35,7 @@ int run_server (struct Resource *res, int sockfd)
 			fprintf( stdout, "accept failed\n");
 			return -1;
 		}
-        if((pthread_create(&threads[i] NULL, server_func, (void *)&mul_args[i])) == -1){
+        if((pthread_create(&threads[i], NULL, server_func, (void *)&mul_args[i])) == -1){
 			printf("create error!\n");
 		}
 		else{
