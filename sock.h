@@ -8,6 +8,8 @@
 #define SCOK_H_
 #include <stdint.h>
 #include "ib.h"
+#include <netdb.h>
+
 int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp);
 int sock_read(int sockfd, void *buffer, int len);
 int sock_write(int sockfd, void *buffer,int len);

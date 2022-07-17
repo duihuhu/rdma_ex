@@ -30,6 +30,7 @@ int main(int argc, char *argv[]){
 	struct Resource *res;
 	int ret = 0;
 	struct addrinfo *rp = NULL;
+	memset(&rp, 0, sizeof(struct addrinfo *));
 	ret = init_config(argc, argv);
 	if (ret == -1){
 		fprintf(stdout, "re init config \n");
