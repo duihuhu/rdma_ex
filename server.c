@@ -32,7 +32,7 @@ int run_server (struct Resource *res, struct addrinfo *addr_res)
     struct sockaddr_in c_addr;
     int listenfd;
     socklen_t c_addr_len = sizeof(struct sockaddr_in);
-    int sockfd;
+    int sockfd = -1;
     struct addrinfo *rp;
     for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
         sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
