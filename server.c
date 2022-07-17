@@ -40,7 +40,6 @@ int run_server (struct Resource *res, struct addrinfo *ad)
 		.ai_flags = AI_PASSIVE
 	};
 	struct addrinfo *addr_res=NULL, *rp=NULL;
-	// struct addrinfo *addr_res=NULL, *ap;
 
 	int ret;
 	char port[10];
@@ -62,6 +61,10 @@ int run_server (struct Resource *res, struct addrinfo *ad)
                 fprintf(stdout, "server bind failed\n");
                 return -1;
             }
+            if (listen(sockfd,5) ==-1) {
+                fprintf (stdout, "listen failed\n");
+                return -1;
+			}
         } else
             return -1;
     }
