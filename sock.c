@@ -31,7 +31,7 @@ struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port)
 		.ai_socktype = SOCK_STREAM,
 		.ai_flags = AI_PASSIVE
 	};
-	struct addrinfo *addr_res=NULL, *rp=NULl;
+	struct addrinfo *addr_res=NULL, *rp=NULL;
 	int ret;
 	int sockfd = -1;
 	char port[10];
