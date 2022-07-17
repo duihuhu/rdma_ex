@@ -35,7 +35,6 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *addr_r
 	// struct addrinfo *addr_res=NULL, *ap;
 
 	int ret;
-	int sockfd = -1;
 	char port[10];
 	// int listenfd = -1;
 	if (sprintf(port, "%d", tcp_port)<0) {
