@@ -44,7 +44,6 @@ int run_client(struct Resource *res, struct addrinfo *ad)
 		.ai_flags = AI_PASSIVE
 	};
 	struct addrinfo *addr_res=NULL;
-	int ret;
 	char port[10];
 	// int listenfd = -1;
 	if (sprintf(port, "%d", cfg.tcp_port)<0) {
