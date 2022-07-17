@@ -53,6 +53,8 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 			rp->ai_family = ap->ai_family;
 			rp->ai_socktype = ap->ai_socktype;
 			rp->ai_protocol = ap->ai_protocol;
+			rp->ai_addr = ap->ai_addr;
+			rp->ai_addrlen = ap->ai_addrlen;
 			// if (!server_name) {
 			// 	if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
 			// 		fprintf(stdout, "server bind failed\n");
