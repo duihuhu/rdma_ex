@@ -32,7 +32,7 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 		.ai_flags = AI_PASSIVE
 	};
 	// struct addrinfo *addr_res=NULL, *rp=NULL;
-	struct addrinfo *addr_res=NULL;
+	struct addrinfo *addr_res=NULL, *ap;
 
 	int ret;
 	int sockfd = -1;
@@ -47,9 +47,12 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 		fprintf(stdout, "getaddrinfo failed\n");
 		return -1;
 	}
-	for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
-		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+	for (ap=addr_res; ap!=NULL; ap=ap->ai_next) {
+		sockfd = socket(ap->ai_family, ap->ai_socktype, ap->ai_protocol);
 		if (sockfd >= 0) {
+			rp->ai_family = ap->ai_family;
+			rp->ai_socktype = ap->ai_socktype;
+			rp->ai_protocol = ap->ai_protocol;
 			// if (!server_name) {
 			// 	if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
 			// 		fprintf(stdout, "server bind failed\n");
