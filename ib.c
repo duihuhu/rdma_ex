@@ -326,7 +326,7 @@ int poll_completion(struct Resource *res)
 					wc.vendor_err);
 			rc = 1;
 		}
-		if (cfg.server_name && (!strcmp(cfg.op_type, IB_OP_WI)))
+		if ((!cfg.server_name) && (!strcmp(cfg.op_type, IB_OP_WI)))
 		{
 			uint32_t in_data;
 			in_data = ntohl(wc.imm_data);
