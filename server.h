@@ -2,6 +2,8 @@
 #define SERVER_H_
 #include "ib.h"
 #include <netinet/in.h>
+#include <sys/socket.h>
+#include <netdb.h>
 
 int run_server(struct Resource *res, struct addrinfo *rp);
 #endif  /*server.h*/
