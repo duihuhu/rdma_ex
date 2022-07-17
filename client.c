@@ -10,7 +10,7 @@ void *client_func(void *mul_args) {
     args = (struct MulArgs *) mul_args;
     ret = init_ib(args->res);
     if (ret < 0) {
-        fprintf(stderr, "client thread %s faild init ib\n", args->thread_id);
+        fprintf(stderr, "client thread %d faild init ib\n", args->thread_id);
         return -1;
     }
     return 0;
