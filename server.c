@@ -18,7 +18,7 @@ void *server_func(void *mul_args){
     return 0;
 }
 
-int run_server (struct Resource *res, int sockfd)
+int run_server (struct Resource *res, struct addrinfo *rp)
 {
     int i = 0;
     struct MulArgs *mul_args;
@@ -31,6 +31,15 @@ int run_server (struct Resource *res, int sockfd)
     struct sockaddr_in c_addr;
     int listenfd;
     socklen_t c_addr_len = sizeof(struct sockaddr_in);
+    int sockfd;
+    sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+    if (sockfd >= 0) {
+        if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+            fprintf(stdout, "server bind failed\n");
+            return -1;
+        }
+    }
+    
     while (1) {
     	listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
 		if (listenfd < 0) {
@@ -38,6 +47,8 @@ int run_server (struct Resource *res, int sockfd)
 			return -1;
 		}
         mul_args[i].sockfd = listenfd;
+        mul_args[i].res = &res[i];
+        mul_args[i].thread_id = i;
         if((pthread_create(&threads[i], NULL, server_func, (void *)&mul_args[i])) == -1){
 			printf("create error!\n");
 		}

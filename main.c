@@ -29,22 +29,23 @@ int main(int argc, char *argv[]){
 	struct Resource *res;
 	int ret = 0;
     int sockfd;
+	struct addrinfo *rp = NULL;
 	ret = init_config(argc, argv);
 	if (ret == -1){
 		fprintf(stdout, "re init config \n");
 		return 0;
 	}
     res = malloc(cfg.num_threads * sizeof(struct Resource));
-    sockfd = init_socket();
+    rp = init_socket();
 
     if (sockfd < 0) {
         fprintf(stdout, "init socket failed\n");
         return 0;
     }
     if (cfg.server_name) {
-		run_client(res, sockfd);
+		run_client(res, rp);
     } else {
-        run_server(res, sockfd);
+        run_server(res, rp);
     }
 	// ret = init_ib(res, sockfd);
 	return 0;

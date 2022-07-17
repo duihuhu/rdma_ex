@@ -48,28 +48,29 @@ int socket_connect(char *server_name, uint32_t tcp_port)
 	for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
 		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 		if (sockfd >= 0) {
-			if (!server_name) {
-				if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
-					fprintf(stdout, "server bind failed\n");
-					return -1;
-				}
-				if (listen(sockfd,5) ==-1) {
-					fprintf (stdout, "listen failed\n");
-					return -1;
-				}
-				listenfd = sockfd;
-			} else { 
-				if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
-					fprintf(stdout, "client connect failed\n");
-					close(sockfd);
-					return  - 1; 
-				}
-				listenfd = sockfd;
-			}
+			// if (!server_name) {
+			// 	if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+			// 		fprintf(stdout, "server bind failed\n");
+			// 		return -1;
+			// 	}
+			// 	if (listen(sockfd,5) ==-1) {
+			// 		fprintf (stdout, "listen failed\n");
+			// 		return -1;
+			// 	}
+			// 	listenfd = sockfd;
+			// } else {
+			// 	if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+			// 		fprintf(stdout, "client connect failed\n");
+			// 		close(sockfd);
+			// 		return  - 1; 
+			// 	}
+			// 	listenfd = sockfd;
+			// }
+			break;
 		}
 	}
 	free(addr_res);
-	return listenfd;
+	return rp;
 
 }
 
@@ -112,21 +113,22 @@ int sock_write(int sockfd, void *buffer, int len)
 	return 0;
 }
 
-int init_socket()
+struct addrinfo init_socket()
 {
 	int sockfd;
+	struct addrinfo *rp = NULL;
 	if (!cfg.server_name) {
-		sockfd = socket_connect(NULL, cfg.tcp_port);
+		rp = socket_connect(NULL, cfg.tcp_port);
 		if (sockfd < 0) {
 			fprintf(stdout, "failed to establish server\n");
-			return sockfd;
+			return rp;
 		}
 	} else {
-		sockfd = socket_connect(cfg.server_name, cfg.tcp_port);
+		rp = socket_connect(cfg.server_name, cfg.tcp_port);
 		if (sockfd < 0) {
 			fprintf(stdout, "failed to establish connect\n");
-			return sockfd;
+			return rp;
 		}
 	}
-	return sockfd;
+	return rp;
 }

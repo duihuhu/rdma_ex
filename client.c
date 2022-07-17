@@ -16,7 +16,7 @@ void *client_func(void *mul_args) {
     return 0;
 }
 
-int run_client(struct Resource *res, int sockfd)
+int run_client(struct Resource *res, struct addrinfo *rp)
 {
     int ret = 0;
     long i = 0;
@@ -36,11 +36,21 @@ int run_client(struct Resource *res, int sockfd)
         fprintf(stderr,  "Failed to allocate threads.");
 
     for (i = 0; i < cfg.num_threads; i++) {
+        int sockfd;
+		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+		if (sockfd >= 0) {
+            if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+                fprintf(stdout, "client connect failed\n");
+                close(sockfd);
+                return  - 1; 
+            }
+        } else
+            return -1;
         res[i].sockfd = sockfd;
         mul_args[i].res = &res[i];
         mul_args[i].sockfd = sockfd;
         mul_args[i].thread_id = i;
-        ret = pthread_create (&threads[i], &attr, client_func, (void *)&mul_args[i]);
+        ret = pthread_create(&threads[i], &attr, client_func, (void *)&mul_args[i]);
         if (ret != 0) 
             fprintf(stderr, "Failed to create client_thread[%ld]", i);
     }
