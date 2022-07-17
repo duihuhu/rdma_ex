@@ -8,10 +8,10 @@
 #define SCOK_H_
 #include <stdint.h>
 #include "ib.h"
-struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port);
+int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp);
 int sock_read(int sockfd, void *buffer, int len);
 int sock_write(int sockfd, void *buffer,int len);
-struct addrinfo* init_socket();
+int init_socket(struct addrinfo *rp);
 uint64_t htonll(uint64_t n);
 uint64_t ntohll(uint64_t n);
 #endif
