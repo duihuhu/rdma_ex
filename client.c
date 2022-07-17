@@ -43,9 +43,7 @@ int run_client(struct Resource *res, struct addrinfo *ad)
 		.ai_socktype = SOCK_STREAM,
 		.ai_flags = AI_PASSIVE
 	};
-	struct addrinfo *addr_res=NULL, *rp=NULL;
-	// struct addrinfo *addr_res=NULL, *ap;
-
+	struct addrinfo *addr_res=NULL;
 	int ret;
 	char port[10];
 	// int listenfd = -1;
