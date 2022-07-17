@@ -6,6 +6,7 @@
  ************************************************************************/
 #include "sock.h"
 #include "ib.h"
+#include "config.h"
 #include <netdb.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -22,7 +23,7 @@ uint64_t ntohll(uint64_t n)
 {
 	return (((uint64_t)ntohl(n))<<32) | ntohl(n>>32);
 }
-int socket_connect(struct Resource *res, char *server_name, uint32_t tcp_port)
+int socket_connect(char *server_name, uint32_t tcp_port)
 {
 	struct addrinfo hints = {
 		.ai_family = AF_INET,
@@ -76,6 +77,7 @@ int socket_connect(struct Resource *res, char *server_name, uint32_t tcp_port)
 	return listenfd;
 
 }
+
 int sock_read(int sockfd, void *buffer, int len)
 {
 	int l_bytes = len;
