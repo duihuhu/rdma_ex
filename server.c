@@ -38,8 +38,10 @@ int run_server (struct Resource *res, struct addrinfo *rp)
             fprintf(stdout, "server bind failed\n");
             return -1;
         }
-    }
-    
+    } else 
+        fprintf(stderr, "create socket fd failed\n");
+
+
     while (1) {
     	listenfd = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
 		if (listenfd < 0) {

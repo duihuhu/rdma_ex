@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
     res = malloc(cfg.num_threads * sizeof(struct Resource));
-    rp = init_socket();
+    init_socket(rp);
 
     if (cfg.server_name) {
 		run_client(res, rp);

@@ -24,14 +24,16 @@ uint64_t ntohll(uint64_t n)
 	return (((uint64_t)ntohl(n))<<32) | ntohl(n>>32);
 }
 
-struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port)
+struct addrinfo* socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 {
 	struct addrinfo hints = {
 		.ai_family = AF_INET,
 		.ai_socktype = SOCK_STREAM,
 		.ai_flags = AI_PASSIVE
 	};
-	struct addrinfo *addr_res=NULL, *rp=NULL;
+	// struct addrinfo *addr_res=NULL, *rp=NULL;
+	struct addrinfo *addr_res=NULL;
+
 	int ret;
 	int sockfd = -1;
 	char port[10];
