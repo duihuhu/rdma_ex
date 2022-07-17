@@ -26,7 +26,7 @@ int run_server (struct Resource *res, int sockfd)
     threads = (pthread_t *) calloc (cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)
         fprintf(stderr,  "Failed to allocate threads.");
-        goto error;
+
     while (1) {
         int listenfd;
         struct sockaddr_in c_addr;
@@ -49,9 +49,4 @@ int run_server (struct Resource *res, int sockfd)
 
     return 0;
 
- error:
-    if (threads != NULL) {
-        free(threads);
-    }    
-    return -1;
 }
