@@ -1,9 +1,10 @@
 #include "server.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "config.h"
 #include "ib.h"
-int server_func(void *mul_args){
+void *server_func(void *mul_args){
     return 0;
 }
 
