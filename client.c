@@ -1,4 +1,5 @@
 #include "ib.h"
+#include "client.h"
 #include "config.h"
 #include <pthread.h>
 #include <stdio.h>
