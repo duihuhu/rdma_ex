@@ -530,11 +530,16 @@ int com_op(struct Resource *res)
 				fprintf(stderr, "failed to post SR\n");
 				return -1;
 			}
+			ck_cs_wire(res);
 			if (poll_completion(res))
 			{
 				fprintf(stderr, "poll completion failed\n");
 				return -1;
 			}
+		} else {
+			memset(res->ib_buf, 0, res->ib_buf_size);
+			ck_cs_wire(res);
+			fprintf(stdout, "swap contents of server's buffer: '%s'\n", res->ib_buf);
 		}
 	}
 	return 0;
