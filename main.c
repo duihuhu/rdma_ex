@@ -14,6 +14,7 @@
 #include "ib.h"
 #include "server.h"
 #include "client.h"
+#include <netdb.h>
 
 struct Config cfg = {
 	NULL, /* dev_name */
