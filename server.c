@@ -18,7 +18,7 @@ void *server_func(void *mul_args){
     return 0;
 }
 
-int run_server (struct Resource *res, struct addrinfo *rp)
+int run_server (struct Resource *res, struct addrinfo *addr_res)
 {
     int i = 0;
     struct MulArgs *mul_args;
@@ -32,6 +32,19 @@ int run_server (struct Resource *res, struct addrinfo *rp)
     int listenfd;
     socklen_t c_addr_len = sizeof(struct sockaddr_in);
     int sockfd;
+    struct addrinfo *rp;
+    for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
+        sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        if (sockfd >= 0) {
+            if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+                fprintf(stdout, "client connect failed\n");
+                close(sockfd);
+                return  - 1; 
+            }
+        } else
+            return -1;
+    }
+
     sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
     if (sockfd >= 0) {
         if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {

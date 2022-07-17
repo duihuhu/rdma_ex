@@ -24,7 +24,7 @@ uint64_t ntohll(uint64_t n)
 	return (((uint64_t)ntohl(n))<<32) | ntohl(n>>32);
 }
 
-int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
+int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *addr_res)
 {
 	struct addrinfo hints = {
 		.ai_family = AF_INET,
@@ -32,7 +32,7 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 		.ai_flags = AI_PASSIVE
 	};
 	// struct addrinfo *addr_res=NULL, *rp=NULL;
-	struct addrinfo *addr_res=NULL, *ap;
+	// struct addrinfo *addr_res=NULL, *ap;
 
 	int ret;
 	int sockfd = -1;
@@ -47,11 +47,14 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 		fprintf(stdout, "getaddrinfo failed\n");
 		return -1;
 	}
-	for (ap=addr_res; ap!=NULL; ap=ap->ai_next) {
-		sockfd = socket(ap->ai_family, ap->ai_socktype, ap->ai_protocol);
-		if (sockfd >= 0) {
-			rp=ap;
-			// rp->ai_addrlen = ap->ai_addrlen;
+	// for (ap=addr_res; ap!=NULL; ap=ap->ai_next) {
+	// 	sockfd = socket(ap->ai_family, ap->ai_socktype, ap->ai_protocol);
+	// 	if (sockfd >= 0) {
+	// 		rp->ai_family = ap->ai_family;
+	// 		rp->ai_socktype = ap->ai_socktype;
+	// 		rp->ai_protocol = ap->ai_protocol;
+	// 		rp->ai_addr = ap->ai_addr;
+	// 		rp->ai_addrlen = ap->ai_addrlen;
 			// if (!server_name) {
 			// 	if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
 			// 		fprintf(stdout, "server bind failed\n");
@@ -70,11 +73,11 @@ int socket_connect(char *server_name, uint32_t tcp_port, struct addrinfo *rp)
 			// 	}
 			// 	listenfd = sockfd;
 			// }
-			close(sockfd);
-			break;
-		} else
-			return -1;
-	}
+	// 		close(sockfd);
+	// 		break;
+	// 	} else
+	// 		return -1;
+	// }
 	// free(addr_res);
 	return 0;
 

@@ -29,7 +29,7 @@ int init_config();
 int main(int argc, char *argv[]){
 	struct Resource *res;
 	int ret = 0;
-	struct addrinfo rp;
+	struct addrinfo *rp=NULL;
 	// memset(&rp, 0, sizeof(struct addrinfo *));
 	ret = init_config(argc, argv);
 	if (ret == -1){
@@ -37,14 +37,14 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
     res = malloc(cfg.num_threads * sizeof(struct Resource));
-    ret = init_socket(&rp);
+    ret = init_socket(rp);
 	if (ret < 0) {
 		fprintf(stdout, "init socket failed\n");
 	}
     if (cfg.server_name) {
-		run_client(res, &rp);
+		run_client(res, rp);
     } else {
-        run_server(res, &rp);
+        run_server(res, rp);
     }
 	// ret = init_ib(res, sockfd);
 	return 0;

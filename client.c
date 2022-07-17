@@ -18,7 +18,7 @@ void *client_func(void *mul_args) {
     return 0;
 }
 
-int run_client(struct Resource *res, struct addrinfo *rp)
+int run_client(struct Resource *res, struct addrinfo *addr_res)
 {
     int ret = 0;
     long i = 0;
@@ -39,15 +39,18 @@ int run_client(struct Resource *res, struct addrinfo *rp)
 
     for (i = 0; i < cfg.num_threads; i++) {
         int sockfd;
-		sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-		if (sockfd >= 0) {
-            if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
-                fprintf(stdout, "client connect failed\n");
-                close(sockfd);
-                return  - 1; 
-            }
-        } else
-            return -1;
+        struct addrinfo *rp;
+        for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
+		    sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+            if (sockfd >= 0) {
+                if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+                    fprintf(stdout, "client connect failed\n");
+                    close(sockfd);
+                    return  - 1; 
+                }
+            } else
+                return -1;
+        }
         res[i].sockfd = sockfd;
         mul_args[i].res = &res[i];
         mul_args[i].sockfd = sockfd;
