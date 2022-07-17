@@ -378,3 +378,50 @@ int post_send(struct Resource *res, int opcode)
 	}
 	return rc;
 }
+
+int com_op(struct Resource *res)
+{
+	if (!strcmp(cfg.op_type, IB_OP_SR)) {
+		if (!cfg.server_name) {
+			return 0;
+		};
+	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
+		if (cfg.server_name) {
+			ck_cs_wire(res);
+			/* read contens of server's buffer */
+			if (post_send(&res, IBV_WR_RDMA_READ))
+			{
+				fprintf(stderr, "failed to post SR read\n");
+				return -1;
+			}
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed read\n");
+				return -1;
+			}
+			fprintf(stdout, "Contents of server's buffer: '%s'\n", res.ib_buf);
+		} else {
+			strcpy(res.ib_buf, "R");
+			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			ck_cs_wire(res);
+		}
+
+	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
+		if (cfg.server_name) {
+			memset(res.ib_buf, 'W', res.ib_buf_size);
+			fprintf(stdout, "res buf %s\n", res.ib_buf);
+			if (post_send(res, IBV_WR_RDMA_WRITE))
+			{
+				fprintf(stderr, "failed to post SR 3\n");
+				return -1;
+			}
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed 3\n");
+				return -1;
+			}
+			fprintf(stdout, "Contents of server's write buffer: '%s'\n", res.ib_buf);
+		}
+	}
+	return 0;
+}

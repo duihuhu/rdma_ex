@@ -12,10 +12,18 @@ void *server_func(void *mul_args){
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
     ret = init_ib(args->res);
+
     if (ret < 0) {
         fprintf(stderr, "server thread %d faild init ib\n", args->thread_id);
         return (void*)-1;
     }
+    
+    ret = com_op(args->res);
+    if (ret < 0) {
+        fprintf(stderr, "communicate operation failed\n");
+        return (void*)-1;
+    }
+
     return 0;
 }
 

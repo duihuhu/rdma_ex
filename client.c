@@ -15,6 +15,11 @@ void *client_func(void *mul_args) {
         fprintf(stderr, "client thread %d faild init ib\n", args->thread_id);
         return (void*)-1;
     }
+    ret = com_op(args->res);
+    if (ret < 0) {
+        fprintf(stderr, "communicate operation failed\n");
+        return (void*)-1;
+    }
     return 0;
 }
 
