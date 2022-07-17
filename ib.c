@@ -326,6 +326,13 @@ int poll_completion(struct Resource *res)
 					wc.vendor_err);
 			rc = 1;
 		}
+		if (cfg.server_name && (!strcmp(cfg.op_type, IB_OP_WI)))
+		{
+			uint32_t in_data;
+			in_data = ntohl(wc.imm_data);
+			fprintf(stdout, "inline data %d", in_data);
+		}
+			
 	}
 	return rc;
 }
@@ -375,7 +382,7 @@ int post_send(struct Resource *res, int opcode)
 			fprintf(stdout, "RDMA Write Request was posted\n");
 			break;
 		case IBV_WR_RDMA_WRITE_WITH_IMM:
-			fprintf(stdout, "RDMA Write Request was posted\n");
+			fprintf(stdout, "RDMA IM Write Request was posted\n");
 			break;
 		default:
 			fprintf(stdout, "Unknown Request was posted\n");
