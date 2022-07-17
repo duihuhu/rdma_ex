@@ -479,7 +479,7 @@ int com_op(struct Resource *res)
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_WI)) {
 		if (cfg.server_name) {
-			memset(res->ib_buf, 'WI', res->ib_buf_size);
+			memset(res->ib_buf, "WI", res->ib_buf_size);
 			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			if (post_send(res, IBV_WR_RDMA_WRITE_WITH_IMM))
 			{
