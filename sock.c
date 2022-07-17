@@ -113,7 +113,7 @@ int sock_write(int sockfd, void *buffer, int len)
 	return 0;
 }
 
-struct addrinfo init_socket()
+struct addrinfo* init_socket()
 {
 	int sockfd;
 	struct addrinfo *rp = NULL;
