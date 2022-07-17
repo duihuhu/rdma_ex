@@ -13,12 +13,12 @@ void *server_func(void *mul_args){
 
 int run_server (struct Resource *res, int sockfd)
 {
-    int   ret         = 0;
-    long  i           = 0;
+    int ret = 0;
+    long i  = 0;
 
-    pthread_t           *threads = NULL;
-    pthread_attr_t       attr;
-    void                *status;
+    pthread_t   *threads = NULL;
+    pthread_attr_t  attr;
+    void    *status;
 
     struct MulArgs *mul_args;
     mul_args = malloc(cfg.num_threads * sizeof(struct MulArgs));
