@@ -498,6 +498,11 @@ int com_op(struct Resource *res)
 		} else {
 			post_receive(res);
 			ck_cs_wire(res);
+			if (poll_completion(res))
+			{
+				fprintf(stderr, "poll completion failed 3\n");
+				return -1;
+			}
 			fprintf(stdout, "Contents of client's write buffer: '%s'\n", res->ib_buf);
 		}
 	}
