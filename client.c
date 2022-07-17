@@ -5,9 +5,14 @@
 #include <stdlib.h>
 
 void *client_func(void *mul_args) {
+    int ret;
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    fprintf(stdout, "client running thread_id %d\n", args->thread_id);
+    ret = init_ib(args->res);
+    if (ret < 0) {
+        fprintf(stderr, "client thread %s faild init ib\n", args->thread_id);
+        return -1;
+    }
     return 0;
 }
 

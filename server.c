@@ -7,7 +7,11 @@
 void *server_func(void *mul_args){
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    fprintf(stdout, "server running %d\n", args->thread_id);
+    ret = init_ib(args->res);
+    if (ret < 0) {
+        fprintf(stderr, "server thread %s faild init ib\n", args->thread_id);
+        return -1;
+    }
     return 0;
 }
 
