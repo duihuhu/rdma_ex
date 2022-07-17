@@ -56,7 +56,7 @@ int run_client(struct Resource *res, struct addrinfo *ad)
 		return -1;
 	}
     int *sockfd;
-    sockfd = malloc(cfg.num_threads * sizeof(int));
+    sockfd = (int *)malloc(cfg.num_threads * sizeof(int));
     for (i = 0; i < cfg.num_threads; i++) {
         struct addrinfo *rp;
         for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {

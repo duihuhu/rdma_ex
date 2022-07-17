@@ -31,7 +31,7 @@ int run_server (struct Resource *res)
     
     struct sockaddr_in c_addr;
     int *listenfd;
-    listenfd = malloc(cfg.num_threads * sizeof(int));
+    listenfd = (int *)malloc(cfg.num_threads * sizeof(int));
     socklen_t c_addr_len = sizeof(struct sockaddr_in);
     int sockfd = -1;
 
