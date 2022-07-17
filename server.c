@@ -5,6 +5,7 @@
 #include "config.h"
 #include "ib.h"
 void *server_func(void *mul_args){
+    int ret;
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
     ret = init_ib(args->res);
