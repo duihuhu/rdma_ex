@@ -34,7 +34,7 @@ int run_server (struct Resource *res, int sockfd)
     }
 
     bool thread_ret_normally = true;
-    for (i = 0; i < num_threads; i++) {
+    for (i = 0; i < cfg.num_threads; i++) {
         ret = pthread_join (threads[i], &status);
         if (ret == 0) 
             fprintf(stderr, "Failed to join thread[%ld].", i);
