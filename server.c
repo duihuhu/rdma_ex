@@ -37,23 +37,22 @@ int run_server (struct Resource *res, struct addrinfo *addr_res)
     for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
         sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
         if (sockfd >= 0) {
-            if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
-                fprintf(stdout, "client connect failed\n");
-                close(sockfd);
-                return  - 1; 
+            if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+                fprintf(stdout, "server bind failed\n");
+                return -1;
             }
         } else
             return -1;
     }
 
-    sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    if (sockfd >= 0) {
-        if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
-            fprintf(stdout, "server bind failed\n");
-            return -1;
-        }
-    } else 
-        fprintf(stderr, "create socket fd failed\n");
+    // sockfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+    // if (sockfd >= 0) {
+    //     if (bind(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+    //         fprintf(stdout, "server bind failed\n");
+    //         return -1;
+    //     }
+    // } else 
+    //     fprintf(stderr, "create socket fd failed\n");
 
 
     while (1) {
