@@ -11,7 +11,7 @@ void *server_func(void *mul_args){
     ret = init_ib(args->res);
     if (ret < 0) {
         fprintf(stderr, "server thread %d faild init ib\n", args->thread_id);
-        return *ret;
+        return (void*)-1;
     }
     return 0;
 }
