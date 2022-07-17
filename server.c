@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unistd.h>
 #include "config.h"
 #include "ib.h"
 void *server_func(void *mul_args){
