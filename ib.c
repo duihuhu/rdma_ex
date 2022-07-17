@@ -333,8 +333,8 @@ int poll_completion(struct Resource *res)
 			fprintf(stdout, "inline data 0x%x\n", in_data);
 		}
 		if (cfg.server_name && (!strcmp(cfg.op_type, IB_OP_CAS))) {
-			uint64_t swap = wr.wr.atomic.swap;
-			fprintf(stdout, "inline data ld\n", swap);
+			uint64_t swap = wc.wr.atomic.swap;
+			fprintf(stdout, "inline data %ld\n", swap);
 		}
 			
 	}
