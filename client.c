@@ -10,7 +10,7 @@ void *client_func(void *mul_args) {
     int ret;
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    ret = init_ib(args->res, args->thread_id);
+    ret = init_ib(args->res);
     if (ret < 0) {
         fprintf(stderr, "client thread %d faild init ib\n", args->thread_id);
         return (void*)-1;
@@ -62,9 +62,9 @@ int run_client(struct Resource *res, struct addrinfo *ad)
         for (rp=addr_res; rp!=NULL; rp=rp->ai_next) {
 		    sockfd[i] = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
             if (sockfd >= 0) {
-                if (connect(sockfd, rp->ai_addr, rp->ai_addrlen)<0) {
+                if (connect(sockfd[i], rp->ai_addr, rp->ai_addrlen)<0) {
                     fprintf(stdout, "client connect failed\n");
-                    close(sockfd);
+                    close(sockfd[i]);
                     return  - 1; 
                 }
             } else
