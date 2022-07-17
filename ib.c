@@ -262,11 +262,11 @@ int init_ib(struct Resource *res)
 
 	fprintf(stdout, "mr was register addr=%p, lkey=0x%x, rkey=0x%x, flags=0x%x\n", res->ib_buf, res->mr->lkey, res->mr->rkey, mflags);
 
-	// ret = ex_qp_info(res);
-	// if (ret < 0) {
-	// 	fprintf(stdout, "failed ex qp info\n");
-	// 	goto init_ib_exit;
-	// }
+	ret = ex_qp_info(res);
+	if (ret < 0) {
+		fprintf(stdout, "failed ex qp info\n");
+		goto init_ib_exit;
+	}
 	return 0;
 init_ib_exit:
 	if (res->qp)
