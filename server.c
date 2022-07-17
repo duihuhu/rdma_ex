@@ -7,7 +7,7 @@
 void *server_func(void *mul_args){
     struct MulArgs *args;
     args = (struct MulArgs *) mul_args;
-    fprintf(stdout, "server running %d", args->thread_id);
+    fprintf(stdout, "server running %d\n", args->thread_id);
     return 0;
 }
 
@@ -19,10 +19,8 @@ int run_server (struct Resource *res, int sockfd)
     pthread_t           *threads = NULL;
     pthread_attr_t       attr;
     void                *status;
-    struct MulArgs mul_args;
     memset(&mul_args, 0, sizeof(struct MulArgs));
-    mul_args.res = res;
-    mul_args.sockfd = sockfd;
+
     pthread_attr_init (&attr);
     pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_JOINABLE);
 
@@ -30,6 +28,9 @@ int run_server (struct Resource *res, int sockfd)
     if (threads == NULL)
         fprintf(stderr,  "Failed to allocate threads.");
     for (i = 0; i < cfg.num_threads; i++) {
+        struct MulArgs mul_args;
+        mul_args.res = res;
+        mul_args.sockfd = sockfd;
         mul_args.thread_id = i;
         ret = pthread_create (&threads[i], &attr, server_func, (void *)&mul_args);
         if (ret != 0) 
