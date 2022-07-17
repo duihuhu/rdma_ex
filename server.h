@@ -5,5 +5,5 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-int run_server(struct Resource *res, struct addrinfo *rp);
+int run_server(struct Resource *res);
 #endif  /*server.h*/

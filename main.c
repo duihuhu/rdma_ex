@@ -37,14 +37,14 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
     res = malloc(cfg.num_threads * sizeof(struct Resource));
-    ret = init_socket(addr_res);
+    // ret = init_socket(addr_res);
 	if (ret < 0) {
 		fprintf(stdout, "init socket failed\n");
 	}
     if (cfg.server_name) {
 		run_client(res, addr_res);
     } else {
-        run_server(res, addr_res);
+        run_server(res);
     }
 	// ret = init_ib(res, sockfd);
 	return 0;
