@@ -58,7 +58,7 @@ void statics(struct Resource *res)
 	for (i=0; i < cfg.num_threads; ++i) {
 		latency = latency + res[i].duration;
 	}
-	fprintf(stdout, "latency %lf %lf\n", latency, (double)cfg.msg_size * 8 /latency);
+	fprintf(stdout, "latency %lf %lf\n", latency/cfg.num_threads, (double)cfg.msg_size * 8 /latency);
 	return;
 }
 static void usage(const char *argv0)
