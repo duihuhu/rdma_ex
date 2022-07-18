@@ -392,7 +392,7 @@ int post_send(struct Resource *res, int opcode)
 		case IBV_WR_RDMA_WRITE_WITH_IMM:
 			fprintf(stdout, "RDMA IM Write Request was posted\n");
 			break;
-		case IBV_WR_ATOMIC_FETCH_AND_ADD:
+		case IBV_WR_ATOMIC_CMP_AND_SWP:
 			fprintf(stdout, "RDMA CAS Request was posted\n");
 			break;
 		default:
@@ -525,7 +525,7 @@ int com_op(struct Resource *res)
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_CAS)) {
 		if (cfg.server_name) {
-			if (post_send(res, IBV_WR_ATOMIC_FETCH_AND_ADD))
+			if (post_send(res, IBV_WR_ATOMIC_CMP_AND_SWP))
 			{
 				fprintf(stderr, "failed to post SR\n");
 				return -1;
