@@ -494,7 +494,7 @@ int com_op(struct Resource *res)
 			}
 			res->duration = latency/1000;
 			res->tp = (double) (cfg.msg_size) * 8 * 1000/latency;
-			fprintf(stdout, "latency %lf %lf\n", latency/1000, (double) (cfg.msg_size) * 8 * 1000/latency);
+			// fprintf(stdout, "latency %lf %lf\n", latency/1000, (double) (cfg.msg_size) * 8 * 1000/latency);
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
