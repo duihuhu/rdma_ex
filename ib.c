@@ -362,7 +362,7 @@ int post_send(struct Resource *res, int opcode)
 	memset(&sge, 0, sizeof(sge));
 	if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP)
 	{
-		sge.addr = (uintptr_t)res->buf;
+		sge.addr = (uintptr_t)&res->buf;
 		sge.length = 8;
 	} else {
 		sge.addr = (uintptr_t)res->ib_buf;
