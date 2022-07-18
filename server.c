@@ -96,6 +96,8 @@ int run_server (struct Resource *res)
 			printf("create success!\n");
 			i++;
 		}
+        if (i >= cfg.num_threads)
+            break;
     }
 
     free (threads);
