@@ -487,7 +487,7 @@ int com_op(struct Resource *res)
 			for (i=0; i<10000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
-				double	throughtput = 0.0;
+				// double	throughtput = 0.0;
 				gettimeofday(&start, NULL);
 				if (post_send(res, IBV_WR_RDMA_READ))
 				{
