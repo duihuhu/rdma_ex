@@ -398,6 +398,9 @@ int post_send(struct Resource *res, int opcode)
 		}
 	}
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
+	struct timeval start, end;
+	double	duration = 0.0;
+	gettimeofday(&start, NULL);
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	if (rc)
 		fprintf(stderr, "failed to post SR\n");
@@ -425,6 +428,63 @@ int post_send(struct Resource *res, int opcode)
 			break;
 		}
 	}
+
+	struct ibv_wc wc;
+	// unsigned long start_time_msec;
+	// unsigned long cur_time_msec;
+	// struct timeval cur_time;
+	int poll_result;
+	/* poll the completion for a while before giving up of doing it .. */
+	// gettimeofday(&cur_time, NULL);
+	// start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
+
+	do
+	{
+		poll_result = ibv_poll_cq(res->cq, 1, &wc);
+		// gettimeofday(&cur_time, NULL);
+		// cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
+	// } while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
+	} while (poll_result == 0);
+	gettimeofday(&end, NULL);
+	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+	fprintf(stdout, "ibv_poll_cq inter mediate %lf\n", duration);
+
+	if (poll_result < 0)
+	{
+		/* poll CQ failed */
+		fprintf(stderr, "poll CQ failed\n");
+		rc = 1;
+	}
+	else if (poll_result == 0)
+	{ /* the CQ is empty */
+		fprintf(stderr, "completion wasn't found in the CQ after timeout\n");
+		rc = 1;
+	}
+	else
+	{
+		/* CQE found */
+		fprintf(stdout, "completion was found in CQ with status 0x%x\n", wc.status);
+		/* check the completion status (here we don't care about the completion opcode */
+		if (wc.status != IBV_WC_SUCCESS)
+		{
+			fprintf(stderr, "got bad completion with status: 0x%x, vendor syndrome: 0x%x\n", wc.status,
+					wc.vendor_err);
+			rc = 1;
+		}
+		if ((!cfg.server_name) && (!strcmp(cfg.op_type, IB_OP_WI)))
+		{
+			uint32_t in_data;
+			in_data = ntohl(wc.imm_data);
+			fprintf(stdout, "inline data 0x%x\n", in_data);
+		}
+		// if (cfg.server_name && (!strcmp(cfg.op_type, IB_OP_CAS))) {
+		// 	uint64_t swap = wc.wr.atomic.swap;
+		// 	fprintf(stdout, "inline data %ld\n", swap);
+		// }
+			
+	}
+
+
 	return rc;
 }
 
