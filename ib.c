@@ -402,42 +402,35 @@ int post_send(struct Resource *res, int opcode)
 	double	duration = 0.0;
 	gettimeofday(&start, NULL);
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
-	if (rc)
-		fprintf(stderr, "failed to post SR\n");
-	else
-	{
-		switch (opcode)
-		{
-		case IBV_WR_SEND:
-			fprintf(stdout, "Send Request was posted\n");
-			break;
-		case IBV_WR_RDMA_READ:
-			fprintf(stdout, "RDMA Read Request was posted\n");
-			break;
-		case IBV_WR_RDMA_WRITE:
-			fprintf(stdout, "RDMA Write Request was posted\n");
-			break;
-		case IBV_WR_RDMA_WRITE_WITH_IMM:
-			fprintf(stdout, "RDMA IM Write Request was posted\n");
-			break;
-		case IBV_WR_ATOMIC_CMP_AND_SWP:
-			fprintf(stdout, "RDMA CAS Request was posted\n");
-			break;
-		default:
-			fprintf(stdout, "Unknown Request was posted\n");
-			break;
-		}
-	}
+	// if (rc)
+	// 	fprintf(stderr, "failed to post SR\n");
+	// else
+	// {
+	// 	switch (opcode)
+	// 	{
+	// 	case IBV_WR_SEND:
+	// 		fprintf(stdout, "Send Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_RDMA_READ:
+	// 		fprintf(stdout, "RDMA Read Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_RDMA_WRITE:
+	// 		fprintf(stdout, "RDMA Write Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_RDMA_WRITE_WITH_IMM:
+	// 		fprintf(stdout, "RDMA IM Write Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_ATOMIC_CMP_AND_SWP:
+	// 		fprintf(stdout, "RDMA CAS Request was posted\n");
+	// 		break;
+	// 	default:
+	// 		fprintf(stdout, "Unknown Request was posted\n");
+	// 		break;
+	// 	}
+	// }
 
 	struct ibv_wc wc;
-	// unsigned long start_time_msec;
-	// unsigned long cur_time_msec;
-	// struct timeval cur_time;
 	int poll_result;
-	/* poll the completion for a while before giving up of doing it .. */
-	// gettimeofday(&cur_time, NULL);
-	// start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
-
 	do
 	{
 		poll_result = ibv_poll_cq(res->cq, 1, &wc);
