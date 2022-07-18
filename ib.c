@@ -454,29 +454,41 @@ int com_op(struct Resource *res)
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (cfg.server_name) {
 			// strcpy(res->ib_buf, "C");
-			if (post_receive(res)) {
-				fprintf(stderr, "client failed to recv rr\n");
-				return -1;
+			for (i=0; i<10000; ++i){
+				if (post_receive(res)) {
+					fprintf(stderr, "client failed to recv rr\n");
+					return -1;
+				}
+				if (poll_completion(res))
+				{
+					fprintf(stderr, "poll completion failed\n");
+					return -1;
+				}
 			}
 			ck_cs_wire(res);
-			if (poll_completion(res))
-			{
-				fprintf(stderr, "poll completion failed\n");
-				return -1;
-			}
-			fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
+			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
-			strcpy(res->ib_buf, "S");
+			memset(res->ib_buf, "S", res->ib_buf_size);
 			ck_cs_wire(res);
-			if (post_send(res, IBV_WR_SEND)) {
-				fprintf(stderr,  "server failed to post sr\n");
-				return -1;
+			for (i=0; i<10000; ++i){
+				struct timeval start, end;
+				double	duration = 0.0;
+				gettimeofday(&start, NULL);
+				if (post_send(res, IBV_WR_SEND)) {
+					fprintf(stderr,  "server failed to post sr\n");
+					return -1;
+				}
+				if (poll_completion(res))
+				{
+					fprintf(stderr, "poll completion failed\n");
+					return -1;
+				}
+				gettimeofday(&end, NULL);
+				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+				latency = latency + duration;
 			}
-			if (poll_completion(res))
-			{
-				fprintf(stderr, "poll completion failed\n");
-				return -1;
-			}
+			res->duration = latency/10000;
+			res->tp = (double) (cfg.msg_size) * 8 * 10000/latency;
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
