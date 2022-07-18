@@ -23,7 +23,7 @@ void *client_func(void *mul_args) {
     return 0;
 }
 
-int run_client(struct Resource *res, struct addrinfo *ad)
+int run_client(struct Resource *res)
 {
     int ret = 0;
     long i = 0;

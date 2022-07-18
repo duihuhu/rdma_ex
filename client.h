@@ -4,5 +4,5 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <netdb.h>
-int run_client(struct Resource *res, struct addrinfo *rp);
+int run_client(struct Resource *res);
 #endif /* client.h */

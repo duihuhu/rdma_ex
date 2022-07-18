@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 		fprintf(stdout, "init socket failed\n");
 	}
     if (cfg.server_name) {
-		run_client(res, addr_res);
+		run_client(res);
     } else {
         run_server(res);
     }
