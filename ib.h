@@ -41,6 +41,7 @@ struct Resource {
 	uint32_t	rkey;
 	uint64_t	raddr;
 	struct QpInfo qpinfo;
+	double duration;
 	
 };
 // extern struct Resource res;

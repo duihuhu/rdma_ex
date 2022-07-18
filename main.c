@@ -43,6 +43,7 @@ int main(int argc, char *argv[]){
 	}
     if (cfg.server_name) {
 		run_client(res);
+		statics(res);
     } else {
         run_server(res);
     }
@@ -50,6 +51,16 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
+static void statics(struct Resource *res)
+{
+	int i;
+	double latency = 0.0;
+	for (i=0; i < cfg.num_threads; ++i) {
+		latency = latency + res[i]->latency;
+	}
+	fprintf(stdout, "latency %lf", latency);
+	return;
+}
 static void usage(const char *argv0)
 {
 	fprintf(stdout, "Usage:\n");
