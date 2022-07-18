@@ -432,7 +432,6 @@ int post_send(struct Resource *res, int opcode)
 	// unsigned long cur_time_msec;
 	// struct timeval cur_time;
 	int poll_result;
-	int rc = 0;
 	/* poll the completion for a while before giving up of doing it .. */
 	// gettimeofday(&cur_time, NULL);
 	// start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
@@ -480,7 +479,7 @@ int post_send(struct Resource *res, int opcode)
 	}
 	gettimeofday(&end, NULL);
 	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-	fprintf(stdout, "interfer %lf", duration);
+	fprintf(stdout, "interfer %lf\n", duration);
 
 	return rc;
 }
