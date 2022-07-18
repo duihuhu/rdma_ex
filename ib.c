@@ -484,7 +484,7 @@ int com_op(struct Resource *res)
 			/* read contens of server's buffer */
 			int i;
 			double latency = 0.0;
-			double throughtput = 0.0;
+			// double throughtput = 0.0;
 			for (i=0; i<10000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
