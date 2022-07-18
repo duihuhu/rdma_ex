@@ -75,7 +75,7 @@ int run_server (struct Resource *res)
                 fprintf(stdout, "server bind failed\n");
                 return -1;
             }
-            if (listen(sockfd,5) ==-1) {
+            if (listen(sockfd,20) ==-1) {
 					fprintf (stdout, "listen failed\n");
 					return -1;
 			}
