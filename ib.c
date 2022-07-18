@@ -492,9 +492,9 @@ int com_op(struct Resource *res)
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 				latency = latency + duration;
 			}
-			res->duration = latency/10000;
-			res->tp = (double) (cfg.msg_size) * 8 * 10000/latency;
-			fprintf(stdout, "latency %lf %lf\n", latency/10000, (double) (cfg.msg_size) * 8 * 10000/latency);
+			res->duration = latency/1000;
+			res->tp = (double) (cfg.msg_size) * 8 * 1000/latency;
+			fprintf(stdout, "latency %lf %lf\n", latency/1000, (double) (cfg.msg_size) * 8 * 1000/latency);
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
 		if (cfg.server_name) {
