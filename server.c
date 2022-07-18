@@ -33,11 +33,11 @@ int run_server (struct Resource *res)
     struct MulArgs *mul_args;
     mul_args = malloc(cfg.num_threads * sizeof(struct MulArgs));
     pthread_t   *threads = NULL;
-    // void    *status;
+    void    *status;
 
-    // pthread_attr_t  attr;    
-    // pthread_attr_init(&attr);
-    // pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_attr_t  attr;    
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
     threads = (pthread_t *) calloc (cfg.num_threads, sizeof(pthread_t));
     if (threads == NULL)
         fprintf(stderr,  "Failed to allocate threads.");
@@ -93,7 +93,7 @@ int run_server (struct Resource *res)
         mul_args[i].sockfd = listenfd[i];
         mul_args[i].res = &res[i];
         mul_args[i].thread_id = i;
-        if((pthread_create(&threads[i], NULL, server_func, (void *)&mul_args[i])) == -1){
+        if((pthread_create(&threads[i], &attr, server_func, (void *)&mul_args[i])) == -1){
 			printf("create error!\n");
 		}
 		else{
