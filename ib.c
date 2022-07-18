@@ -468,8 +468,9 @@ int com_op(struct Resource *res)
 			ck_cs_wire(res);
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
-			memset(res->ib_buf, "S", res->ib_buf_size);
+			memset(res->ib_buf, 'S', res->ib_buf_size);
 			ck_cs_wire(res);
+			double latency = 0.0;
 			for (i=0; i<10000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
