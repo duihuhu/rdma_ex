@@ -508,7 +508,7 @@ int com_op(struct Resource *res)
 				throughtput = throughtput + tp;
 			}
 			fprintf(stdout, "latency %lf us\n", latency/10000);
-			fprintf(stdout, "throughtput %lf Gb/s\n", throughtput * 8/10000);
+			fprintf(stdout, "throughtput %lf Gb/s\n", throughtput/10000);
 			// fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
