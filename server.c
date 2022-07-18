@@ -125,11 +125,11 @@ int run_server (struct Resource *res)
 
     return 0;
 
- error:
-    if (threads != NULL) {
-        free(threads);
-    }
-    pthread_attr_destroy(&attr);
+//  error:
+//     if (threads != NULL) {
+//         free(threads);
+//     }
+//     pthread_attr_destroy(&attr);
     
-    return -1;
+//     return -1;
 }
