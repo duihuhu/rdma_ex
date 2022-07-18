@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
 		statics(res);
     } else {
         run_server(res);
-		// statics(res);
+		statics(res);
 
     }
 	// ret = init_ib(res, sockfd);
