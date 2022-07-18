@@ -154,7 +154,10 @@ int ex_qp_info(struct Resource *res)
 	}
 	res->rkey = remote_info.rkey;
 	res->raddr = remote_info.raddr;
-	fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res->mr->rkey, res->ib_buf, res->rkey, res->raddr);
+	if (!strcmp(cfg.op_type, IB_OP_CAS))
+		fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res->mr->rkey, &res->buf, res->rkey, res->raddr);
+	else
+		fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res->mr->rkey, res->ib_buf, res->rkey, res->raddr);
 	
 	ret = conv_qp_status(res, res->qp, remote_info.qp_num, remote_info.lid);
 	if (ret < 0) {
