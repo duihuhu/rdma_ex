@@ -56,7 +56,7 @@ void statics(struct Resource *res)
 	int i;
 	double latency = 0.0;
 	for (i=0; i < cfg.num_threads; ++i) {
-		latency = latency + res[i]->latency;
+		latency = latency + res[i].latency;
 	}
 	fprintf(stdout, "latency %lf", latency);
 	return;
