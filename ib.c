@@ -498,7 +498,7 @@ int com_op(struct Resource *res)
 			duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 			throughtput = (double) (cfg.msg_size) / duration;
 			fprintf(stdout, "latency %lf", duration);
-			fprintf(throughtput, "throughtput %lf", throughtput);
+			fprintf(stdout, "throughtput %lf", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
 			memset(res->ib_buf, 'R', res->ib_buf_size);
