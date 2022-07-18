@@ -497,8 +497,9 @@ int com_op(struct Resource *res)
 			gettimeofday(&end, NULL);
 			duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 			throughtput = (double) (cfg.msg_size) / duration;
-			fprintf(stdout, "latency %lf us\n", duration);
-			fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
+			fprintf(stdout, "%lf %lf \n", duration, throughtput);
+			// fprintf(stdout, "latency %lf us\n", duration);
+			// fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
 			memset(res->ib_buf, 'R', res->ib_buf_size);
