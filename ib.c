@@ -397,7 +397,7 @@ int post_send(struct Resource *res, int opcode)
 	}
 	gettimeofday(&end, NULL);
 	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-	fprintf(stdout, "interval %ld", duration);
+	fprintf(stdout, "interval %lf", duration);
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	if (rc)
