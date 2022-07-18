@@ -29,7 +29,7 @@ void *server_func(void *mul_args){
 
 int run_server (struct Resource *res)
 {
-    int i = 0;
+    long i = 0;
     struct MulArgs *mul_args;
     mul_args = malloc(cfg.num_threads * sizeof(struct MulArgs));
     pthread_t   *threads = NULL;
