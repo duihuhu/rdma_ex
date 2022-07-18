@@ -516,19 +516,32 @@ int com_op(struct Resource *res)
 
 	} else if (!strcmp(cfg.op_type, IB_OP_WR)) {
 		if (cfg.server_name) {
-			strcpy(res->ib_buf, "W");
-			fprintf(stdout, "res buf %s\n", res->ib_buf);
-			if (post_send(res, IBV_WR_RDMA_WRITE))
-			{
-				fprintf(stderr, "failed to post SR 3\n");
-				return -1;
+			memset(res->ib_buf, 'R', res->ib_buf_size);
+			// fprintf(stdout, "res buf %s\n", res->ib_buf);
+			int i;
+			double latency = 0.0;
+			for (i=0; i<10000; ++i){
+				struct timeval start, end;
+				double	duration = 0.0;
+				gettimeofday(&start, NULL);
+				if (post_send(res, IBV_WR_RDMA_WRITE))
+				{
+					fprintf(stderr, "failed to post SR 3\n");
+					return -1;
+				}
+				if (poll_completion(res))
+				{
+					fprintf(stderr, "poll completion failed 3\n");
+					return -1;
+				}
+				gettimeofday(&end, NULL);
+				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+				latency = latency + duration;
 			}
+			fprintf(stdout, "latency %lf %lf\n", latency/10000, (double) (cfg.msg_size) * 8 * 10000/latency);
+			fprintf(stdout, "latency %lf us\n", latency/10000);
+			fprintf(stdout, "throughtput %lf Gb/s\n", (double) (cfg.msg_size) * 8 * 10000/latency);
 			ck_cs_wire(res);
-			if (poll_completion(res))
-			{
-				fprintf(stderr, "poll completion failed 3\n");
-				return -1;
-			}
 		} else {
 			ck_cs_wire(res);
 			fprintf(stdout, "Contents of client's write buffer: '%s'\n", res->ib_buf);
