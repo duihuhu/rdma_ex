@@ -503,7 +503,7 @@ int com_op(struct Resource *res)
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 				latency = latency + duration;
 			}
-			fprintf(stdout, "latency %lf us\n", latency/10000);
+			fprintf(stdout, "latency %lf us\n", latency/1000);
 			fprintf(stdout, "throughtput %lf Gb/s\n", (double) (cfg.msg_size) * 8 * 1000/latency);
 			// fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
