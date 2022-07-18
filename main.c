@@ -25,7 +25,7 @@ struct Config cfg = {
 	"SR", /* op type */
 };
 int init_config();
-
+void statics(struct Resource *res);
 int main(int argc, char *argv[]){
 	struct Resource *res;
 	int ret = 0;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
-static void statics(struct Resource *res)
+void statics(struct Resource *res)
 {
 	int i;
 	double latency = 0.0;
