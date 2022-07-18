@@ -29,7 +29,7 @@ int init_config();
 int main(int argc, char *argv[]){
 	struct Resource *res;
 	int ret = 0;
-	struct addrinfo *addr_res=NULL;
+	// struct addrinfo *addr_res=NULL;
 	// memset(&rp, 0, sizeof(struct addrinfo *));
 	ret = init_config(argc, argv);
 	if (ret == -1){
