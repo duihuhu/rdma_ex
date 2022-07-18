@@ -480,6 +480,10 @@ int com_op(struct Resource *res)
 		if (cfg.server_name) {
 			ck_cs_wire(res);
 			/* read contens of server's buffer */
+			struct timeval start, end;
+			gettimeofday(&start, NULL);
+			double	duration = 0.0;
+			double	throughtput = 0.0;
 			if (post_send(res, IBV_WR_RDMA_READ))
 			{
 				fprintf(stderr, "failed to post SR read\n");
@@ -490,7 +494,12 @@ int com_op(struct Resource *res)
 				fprintf(stderr, "poll completion failed read\n");
 				return -1;
 			}
-			fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
+			gettimeofday(&end, NULL);
+			duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+			throughtput = (double) (cfg.msg_size) / duration;
+			fprintf(stdout, "latency %lf", duration);
+			fprintf(throughtput, "throughtput %lf", throughtput);
+			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
 			memset(res->ib_buf, 'R', res->ib_buf_size);
 			fprintf(stdout, "res buf %s\n", res->ib_buf);
