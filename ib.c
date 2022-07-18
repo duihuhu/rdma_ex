@@ -381,7 +381,7 @@ int post_send(struct Resource *res, int opcode)
 	if (opcode != IBV_WR_SEND)
 	{
 		sr.wr.rdma.remote_addr = res->raddr;
-		fprintf(stdout, "sr remote addr %0xlx", sr.wr.rdma.remote_addr);
+		fprintf(stdout, "sr remote addr 0x%lx", sr.wr.rdma.remote_addr);
 		sr.wr.rdma.rkey = res->rkey;
 		if (opcode == IBV_WR_RDMA_WRITE_WITH_IMM) 
 			sr.imm_data   = htonl(0x1234);
