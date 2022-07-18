@@ -460,13 +460,15 @@ int com_op(struct Resource *res)
 					fprintf(stderr, "client failed to recv rr\n");
 					return -1;
 				}
+			}
+			ck_cs_wire(res);
+			for (i=0; i<10000; ++i) {
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
 					return -1;
 				}
 			}
-			ck_cs_wire(res);
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
 			memset(res->ib_buf, 'S', res->ib_buf_size);
