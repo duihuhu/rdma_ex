@@ -483,11 +483,12 @@ int com_op(struct Resource *res)
 			ck_cs_wire(res);
 			/* read contens of server's buffer */
 			int i;
-			double total = 0;
+			double latency = 0.0;
+			double throughtput = 0.0;
 			for (i=0; i<10000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
-				// double	throughtput = 0.0;
+				double	tp = 0.0;
 				gettimeofday(&start, NULL);
 				if (post_send(res, IBV_WR_RDMA_READ))
 				{
@@ -501,12 +502,13 @@ int com_op(struct Resource *res)
 				}
 				gettimeofday(&end, NULL);
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-				// throughtput = (double) (cfg.msg_size) / duration;
+				tp = (double) (cfg.msg_size) / duration;
 				// fprintf(stdout, "%lf %lf \n", duration, throughtput);
-				total = total + duration;
+				latency = latency + duration;
+				throughtput = throughtput + tp;
 			}
-			fprintf(stdout, "latency %lf us\n", total/10000);
-			// fprintf(stdout, "latency %lf us\n", duration);
+			fprintf(stdout, "latency %lf us\n", latency/10000);
+			fprintf(stdout, "throughtput %lf us\n", throughtput/10000);
 			// fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
