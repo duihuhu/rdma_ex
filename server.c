@@ -93,33 +93,33 @@ int run_server (struct Resource *res)
         mul_args[i].sockfd = listenfd[i];
         mul_args[i].res = &res[i];
         mul_args[i].thread_id = i;
-        if((pthread_create(&threads[i], &attr, server_func, (void *)&mul_args[i])) == -1){
+        if((pthread_create(&threads[i], NULL, server_func, (void *)&mul_args[i])) == -1){
 			printf("create error!\n");
 		}
 		else{
 			printf("create success!\n");
 			i++;
 		}
-        if (i >= cfg.num_threads)
-            break;
+        // if (i >= cfg.num_threads)
+        //     break;
     }
-    bool thread_ret_normally = true;
-    for (i = 0; i < cfg.num_threads; i++) {
-        ret = pthread_join (threads[i], &status);
-        if (ret != 0) 
-            fprintf(stderr, "Failed to join thread[%ld].", i);
-        if ((long)status != 0) {
-            thread_ret_normally = false;
-            fprintf(stdout, "client_thread[%ld]: failed to execute", i);
-        }
-        close(listenfd[i]);
-    }
-    close(sockfd);
+    // bool thread_ret_normally = true;
+    // for (i = 0; i < cfg.num_threads; i++) {
+    //     ret = pthread_join (threads[i], &status);
+    //     if (ret != 0) 
+    //         fprintf(stderr, "Failed to join thread[%ld].", i);
+    //     if ((long)status != 0) {
+    //         thread_ret_normally = false;
+    //         fprintf(stdout, "client_thread[%ld]: failed to execute", i);
+    //     }
+    //     close(listenfd[i]);
+    // }
+    // close(sockfd);
 
-    if (thread_ret_normally == false) {
-        goto error;
-    }
-    pthread_attr_destroy(&attr);
+    // if (thread_ret_normally == false) {
+    //     goto error;
+    // }
+    // pthread_attr_destroy(&attr);
 
     free (threads);
 
