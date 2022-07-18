@@ -315,7 +315,7 @@ int poll_completion(struct Resource *res)
 		// gettimeofday(&cur_time, NULL);
 		// cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	// } while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
-	} while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
+	} while (poll_result == 0);
 
 	if (poll_result < 0)
 	{
