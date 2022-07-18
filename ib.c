@@ -400,43 +400,14 @@ int post_send(struct Resource *res, int opcode)
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	struct timeval start, end;
 	double	duration = 0.0;
-	gettimeofday(&start, NULL);
-	rc = ibv_post_send(res->qp, &sr, &bad_wr);
-	// if (rc)
-	// 	fprintf(stderr, "failed to post SR\n");
-	// else
-	// {
-	// 	switch (opcode)
-	// 	{
-	// 	case IBV_WR_SEND:
-	// 		fprintf(stdout, "Send Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_RDMA_READ:
-	// 		fprintf(stdout, "RDMA Read Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_RDMA_WRITE:
-	// 		fprintf(stdout, "RDMA Write Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_RDMA_WRITE_WITH_IMM:
-	// 		fprintf(stdout, "RDMA IM Write Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_ATOMIC_CMP_AND_SWP:
-	// 		fprintf(stdout, "RDMA CAS Request was posted\n");
-	// 		break;
-	// 	default:
-	// 		fprintf(stdout, "Unknown Request was posted\n");
-	// 		break;
-	// 	}
-	// }
 
 	struct ibv_wc wc;
 	int poll_result;
+	gettimeofday(&start, NULL);
+	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	do
 	{
 		poll_result = ibv_poll_cq(res->cq, 1, &wc);
-		// gettimeofday(&cur_time, NULL);
-		// cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
-	// } while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
 	} while (poll_result == 0);
 	gettimeofday(&end, NULL);
 	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
