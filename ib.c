@@ -331,7 +331,7 @@ int poll_completion(struct Resource *res)
 	else
 	{
 		/* CQE found */
-		fprintf(stdout, "completion was found in CQ with status 0x%x\n", wc.status);
+		// fprintf(stdout, "completion was found in CQ with status 0x%x\n", wc.status);
 		/* check the completion status (here we don't care about the completion opcode */
 		if (wc.status != IBV_WC_SUCCESS)
 		{
@@ -394,32 +394,32 @@ int post_send(struct Resource *res, int opcode)
 
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
-	if (rc)
-		fprintf(stderr, "failed to post SR\n");
-	else
-	{
-		switch (opcode)
-		{
-		case IBV_WR_SEND:
-			fprintf(stdout, "Send Request was posted\n");
-			break;
-		case IBV_WR_RDMA_READ:
-			fprintf(stdout, "RDMA Read Request was posted\n");
-			break;
-		case IBV_WR_RDMA_WRITE:
-			fprintf(stdout, "RDMA Write Request was posted\n");
-			break;
-		case IBV_WR_RDMA_WRITE_WITH_IMM:
-			fprintf(stdout, "RDMA IM Write Request was posted\n");
-			break;
-		case IBV_WR_ATOMIC_CMP_AND_SWP:
-			fprintf(stdout, "RDMA CAS Request was posted\n");
-			break;
-		default:
-			fprintf(stdout, "Unknown Request was posted\n");
-			break;
-		}
-	}
+	// if (rc)
+	// 	fprintf(stderr, "failed to post SR\n");
+	// else
+	// {
+	// 	switch (opcode)
+	// 	{
+	// 	case IBV_WR_SEND:
+	// 		fprintf(stdout, "Send Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_RDMA_READ:
+	// 		fprintf(stdout, "RDMA Read Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_RDMA_WRITE:
+	// 		fprintf(stdout, "RDMA Write Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_RDMA_WRITE_WITH_IMM:
+	// 		fprintf(stdout, "RDMA IM Write Request was posted\n");
+	// 		break;
+	// 	case IBV_WR_ATOMIC_CMP_AND_SWP:
+	// 		fprintf(stdout, "RDMA CAS Request was posted\n");
+	// 		break;
+	// 	default:
+	// 		fprintf(stdout, "Unknown Request was posted\n");
+	// 		break;
+	// 	}
+	// }
 	return rc;
 }
 
@@ -482,24 +482,30 @@ int com_op(struct Resource *res)
 		if (cfg.server_name) {
 			ck_cs_wire(res);
 			/* read contens of server's buffer */
-			struct timeval start, end;
-			double	duration = 0.0;
-			double	throughtput = 0.0;
-			gettimeofday(&start, NULL);
-			if (post_send(res, IBV_WR_RDMA_READ))
-			{
-				fprintf(stderr, "failed to post SR read\n");
-				return -1;
+			int i;
+			double total = 0;
+			for (i=0; i<10000; ++i){
+				struct timeval start, end;
+				double	duration = 0.0;
+				double	throughtput = 0.0;
+				gettimeofday(&start, NULL);
+				if (post_send(res, IBV_WR_RDMA_READ))
+				{
+					fprintf(stderr, "failed to post SR read\n");
+					return -1;
+				}
+				if (poll_completion(res))
+				{
+					fprintf(stderr, "poll completion failed read\n");
+					return -1;
+				}
+				gettimeofday(&end, NULL);
+				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+				// throughtput = (double) (cfg.msg_size) / duration;
+				// fprintf(stdout, "%lf %lf \n", duration, throughtput);
+				total = total + duration;
 			}
-			if (poll_completion(res))
-			{
-				fprintf(stderr, "poll completion failed read\n");
-				return -1;
-			}
-			gettimeofday(&end, NULL);
-			duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-			throughtput = (double) (cfg.msg_size) / duration;
-			fprintf(stdout, "%lf %lf \n", duration, throughtput);
+			fprintf(stdout, "latency %lf us\n", total/10000);
 			// fprintf(stdout, "latency %lf us\n", duration);
 			// fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
