@@ -55,10 +55,12 @@ void statics(struct Resource *res)
 {
 	int i;
 	double latency = 0.0;
+	double throughtput = 0.0;
 	for (i=0; i < cfg.num_threads; ++i) {
 		latency = latency + res[i].duration;
+		throughtput = throughtput + res[i].tp;
 	}
-	fprintf(stdout, "latency %lf %lf\n", latency/cfg.num_threads, (double)cfg.msg_size * 8 /latency);
+	fprintf(stdout, "latency %lf %lf\n", latency/cfg.num_threads, throughtput/cfg.num_threads);
 	return;
 }
 static void usage(const char *argv0)
