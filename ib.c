@@ -488,7 +488,6 @@ int com_op(struct Resource *res)
 			for (i=0; i<10000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
-				double	tp = 0.0;
 				gettimeofday(&start, NULL);
 				if (post_send(res, IBV_WR_RDMA_READ))
 				{
@@ -502,12 +501,10 @@ int com_op(struct Resource *res)
 				}
 				gettimeofday(&end, NULL);
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-				tp = (double) (cfg.msg_size) * 8 / duration;
 				latency = latency + duration;
-				throughtput = throughtput + tp;
 			}
 			fprintf(stdout, "latency %lf us\n", latency/10000);
-			fprintf(stdout, "throughtput %lf Gb/s\n", throughtput/10000);
+			fprintf(stdout, "throughtput %lf Gb/s\n", (double) (cfg.msg_size) * 8 * 10000/latency);
 			// fprintf(stdout, "throughtput %lf GB/s\n", throughtput);
 			// fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
