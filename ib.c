@@ -356,10 +356,6 @@ int poll_completion(struct Resource *res)
 
 int post_send(struct Resource *res, int opcode)
 {
-	struct timeval start, end;
-	double	duration = 0.0;
-	gettimeofday(&start, NULL);
-
 	struct ibv_send_wr sr;
 	struct ibv_sge sge;
 	struct ibv_send_wr *bad_wr = NULL;
@@ -395,9 +391,6 @@ int post_send(struct Resource *res, int opcode)
 			sr.wr.atomic.swap        = 1ULL; /* the value that remote address will be assigned to */
 		}
 	}
-	gettimeofday(&end, NULL);
-	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-	fprintf(stdout, "interval %lf", duration);
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	if (rc)
@@ -497,12 +490,12 @@ int com_op(struct Resource *res)
 				fprintf(stderr, "failed to post SR read\n");
 				return -1;
 			}
+			gettimeofday(&end, NULL);
 			if (poll_completion(res))
 			{
 				fprintf(stderr, "poll completion failed read\n");
 				return -1;
 			}
-			gettimeofday(&end, NULL);
 			duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 			throughtput = (double) (cfg.msg_size) / duration;
 			fprintf(stdout, "%lf %lf \n", duration, throughtput);
