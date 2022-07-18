@@ -309,7 +309,9 @@ int poll_completion(struct Resource *res)
 	/* poll the completion for a while before giving up of doing it .. */
 	// gettimeofday(&cur_time, NULL);
 	// start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
-
+	struct timeval start, end;
+	double	duration = 0.0;
+	gettimeofday(&start, NULL);
 	do
 	{
 		poll_result = ibv_poll_cq(res->cq, 1, &wc);
@@ -317,6 +319,9 @@ int poll_completion(struct Resource *res)
 		// cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	// } while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
 	} while (poll_result == 0);
+	gettimeofday(&end, NULL);
+	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+	fprintf(stdout, "ibv_poll_cq inter mediate %lf\n", duration);
 
 	if (poll_result < 0)
 	{
