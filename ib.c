@@ -544,7 +544,7 @@ int com_op(struct Resource *res)
 			ck_cs_wire(res);
 		} else {
 			ck_cs_wire(res);
-			fprintf(stdout, "Contents of client's write buffer: '%s'\n", res->ib_buf);
+			// fprintf(stdout, "Contents of client's write buffer: '%s'\n", res->ib_buf);
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_WI)) {
 		if (cfg.server_name) {
