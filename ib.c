@@ -455,14 +455,14 @@ int com_op(struct Resource *res)
 		if (cfg.server_name) {
 			// strcpy(res->ib_buf, "C");
 			int i=0;
-			for (i=0; i<5; ++i){
+			for (i=0; i<1000; ++i){
 				if (post_receive(res)) {
 					fprintf(stderr, "client failed to recv rr\n");
 					return -1;
 				}
 			}
 			ck_cs_wire(res);
-			for (i=0; i<5; ++i) {
+			for (i=0; i<1000; ++i) {
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
@@ -475,7 +475,7 @@ int com_op(struct Resource *res)
 			ck_cs_wire(res);
 			double latency = 0.0;
 			int i;
-			for (i=0; i<5; ++i){
+			for (i=0; i<1000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
 				gettimeofday(&start, NULL);
