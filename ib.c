@@ -309,9 +309,6 @@ int poll_completion(struct Resource *res)
 	/* poll the completion for a while before giving up of doing it .. */
 	// gettimeofday(&cur_time, NULL);
 	// start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
-	struct timeval start, end;
-	double	duration = 0.0;
-	gettimeofday(&start, NULL);
 	do
 	{
 		poll_result = ibv_poll_cq(res->cq, 1, &wc);
@@ -319,9 +316,6 @@ int poll_completion(struct Resource *res)
 		// cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	// } while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
 	} while (poll_result == 0);
-	gettimeofday(&end, NULL);
-	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-	fprintf(stdout, "ibv_poll_cq inter mediate %lf\n", duration);
 
 	if (poll_result < 0)
 	{
@@ -397,58 +391,35 @@ int post_send(struct Resource *res, int opcode)
 			sr.wr.atomic.swap        = 1ULL; /* the value that remote address will be assigned to */
 		}
 	}
+
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
-	struct timeval start, end;
-	double	duration = 0.0;
-
-	struct ibv_wc wc;
-	int poll_result;
-	gettimeofday(&start, NULL);
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
-	do
-	{
-		poll_result = ibv_poll_cq(res->cq, 1, &wc);
-	} while (poll_result == 0);
-	gettimeofday(&end, NULL);
-	duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-	fprintf(stdout, "ibv_poll_cq inter mediate %lf\n", duration);
-
-	if (poll_result < 0)
-	{
-		/* poll CQ failed */
-		fprintf(stderr, "poll CQ failed\n");
-		rc = 1;
-	}
-	else if (poll_result == 0)
-	{ /* the CQ is empty */
-		fprintf(stderr, "completion wasn't found in the CQ after timeout\n");
-		rc = 1;
-	}
+	if (rc)
+		fprintf(stderr, "failed to post SR\n");
 	else
 	{
-		/* CQE found */
-		fprintf(stdout, "completion was found in CQ with status 0x%x\n", wc.status);
-		/* check the completion status (here we don't care about the completion opcode */
-		if (wc.status != IBV_WC_SUCCESS)
+		switch (opcode)
 		{
-			fprintf(stderr, "got bad completion with status: 0x%x, vendor syndrome: 0x%x\n", wc.status,
-					wc.vendor_err);
-			rc = 1;
+		case IBV_WR_SEND:
+			fprintf(stdout, "Send Request was posted\n");
+			break;
+		case IBV_WR_RDMA_READ:
+			fprintf(stdout, "RDMA Read Request was posted\n");
+			break;
+		case IBV_WR_RDMA_WRITE:
+			fprintf(stdout, "RDMA Write Request was posted\n");
+			break;
+		case IBV_WR_RDMA_WRITE_WITH_IMM:
+			fprintf(stdout, "RDMA IM Write Request was posted\n");
+			break;
+		case IBV_WR_ATOMIC_CMP_AND_SWP:
+			fprintf(stdout, "RDMA CAS Request was posted\n");
+			break;
+		default:
+			fprintf(stdout, "Unknown Request was posted\n");
+			break;
 		}
-		if ((!cfg.server_name) && (!strcmp(cfg.op_type, IB_OP_WI)))
-		{
-			uint32_t in_data;
-			in_data = ntohl(wc.imm_data);
-			fprintf(stdout, "inline data 0x%x\n", in_data);
-		}
-		// if (cfg.server_name && (!strcmp(cfg.op_type, IB_OP_CAS))) {
-		// 	uint64_t swap = wc.wr.atomic.swap;
-		// 	fprintf(stdout, "inline data %ld\n", swap);
-		// }
-			
 	}
-
-
 	return rc;
 }
 
