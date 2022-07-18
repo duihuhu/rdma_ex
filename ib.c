@@ -239,7 +239,7 @@ int init_ib(struct Resource *res)
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
 	if (!strcmp(cfg.op_type, IB_OP_CAS)) {
 		res->buf = 0ULL;
-		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 1, mflags);
+		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 8, mflags);
 	} else {
 		memset(res->ib_buf, 0, res->ib_buf_size);
 		res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
@@ -357,7 +357,7 @@ int post_send(struct Resource *res, int opcode)
 	if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP)
 	{
 		sge.addr = (uintptr_t)res->buf;
-		sge.length = 1;
+		sge.length = 8;
 	} else {
 		sge.addr = (uintptr_t)res->ib_buf;
 		sge.length = res->ib_buf_size;
