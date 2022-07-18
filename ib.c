@@ -492,7 +492,7 @@ int com_op(struct Resource *res)
 			}
 			fprintf(stdout, "Contents of server's buffer: '%s'\n", res->ib_buf);
 		} else {
-			strcpy(res->ib_buf, "R");
+			memset(res->ib_buf, "R", res->ib_buf_size);
 			fprintf(stdout, "res buf %s\n", res->ib_buf);
 			ck_cs_wire(res);
 		}

@@ -59,7 +59,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, "Options:\n");
 	fprintf(stdout, " -p, --port <port> listen on/connect to port <port> default 7000\n");
 	fprintf(stdout, " -d, --ib-dev <dev> use IB device <dev> (default first device found)\n");
-	fprintf(stdout, " -s, --msg-size  (default 1 alloc numbers of page)\n");
+	fprintf(stdout, " -s, --msg-size  (default 1 alloc msg size)\n");
 	fprintf(stdout, " -t, --num_threads (defulat 1)\n");
 	fprintf(stdout, " -o, --op-type (default type send/recv)\n");
 }
