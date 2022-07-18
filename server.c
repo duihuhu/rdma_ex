@@ -112,6 +112,8 @@ int run_server (struct Resource *res)
             thread_ret_normally = false;
             fprintf(stdout, "client_thread[%ld]: failed to execute", i);
         }
+        close(listenfd[i]);
+        close(sockfd[i]);
     }
 
     if (thread_ret_normally == false) {
