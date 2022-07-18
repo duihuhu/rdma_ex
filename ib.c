@@ -366,7 +366,7 @@ int post_send(struct Resource *res, int opcode)
 		sr.wr.rdma.rkey = res->rkey;
 		if (opcode == IBV_WR_RDMA_WRITE_WITH_IMM) 
 			sr.imm_data   = htonl(0x1234);
-		if (opcode == IBV_WR_ATOMIC_FETCH_AND_ADD) {
+		if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP) {
 			sr.wr.atomic.compare_add = 0ULL; /* expected value in remote address */
 			sr.wr.atomic.swap        = 1ULL; /* the value that remote address will be assigned to */
 		}
