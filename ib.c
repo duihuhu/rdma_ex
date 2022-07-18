@@ -244,8 +244,8 @@ int init_ib(struct Resource *res)
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
 	if (!strcmp(cfg.op_type, IB_OP_CAS)) {
-		*res->buf = 0ULL;
-		res->mr = ibv_reg_mr(res->pd, (void *)res->buf, 8, mflags);
+		res->buf = 0ULL;
+		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 8, mflags);
 	} else {
 		memset(res->ib_buf, 0, res->ib_buf_size);
 		res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
@@ -556,7 +556,7 @@ int com_op(struct Resource *res)
 			}
 		} else {
 			ck_cs_wire(res);
-			fprintf(stdout, "swap contents of server's buffer: '%ld'\n", *res->buf);
+			fprintf(stdout, "swap contents of server's buffer: '%ld'\n", res->buf);
 		}
 	}
 	return 0;
