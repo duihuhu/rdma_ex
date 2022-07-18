@@ -122,7 +122,10 @@ int ex_qp_info(struct Resource *res)
 	local_info.lid = htons(res->port_attr.lid);
 	local_info.qp_num = htonl(res->qp->qp_num);
 	local_info.rkey = htonl(res->mr->rkey);
-	local_info.raddr = htonll((uintptr_t)res->ib_buf);
+	if (cfg.op_type == IB_OP_CAS)
+		local_info.raddr = htonll((uintptr_t)res->buf);
+	else
+		local_info.raddr = htonll((uintptr_t)res->ib_buf);
 	int ret;
 	if (!cfg.server_name) {
 
