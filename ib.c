@@ -537,7 +537,7 @@ int com_op(struct Resource *res)
 				return -1;
 			}
 		} else {
-			res->ib_buf = 0ULL;
+			res->ib_buf = (char*)0ULL;
 			ck_cs_wire(res);
 			fprintf(stdout, "swap contents of server's buffer: '%s'\n", res->ib_buf);
 		}
