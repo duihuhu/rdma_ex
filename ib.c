@@ -354,8 +354,15 @@ int post_send(struct Resource *res, int opcode)
 	int rc;
 	/* prepare the scatter/gather entry */
 	memset(&sge, 0, sizeof(sge));
-	sge.addr = (uintptr_t)res->ib_buf;
-	sge.length = res->ib_buf_size;
+	if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP)
+	{
+		sge.addr = (uintptr_t)res->buf;
+		sge.length = 1;
+	} else {
+		sge.addr = (uintptr_t)res->ib_buf;
+		sge.length = res->ib_buf_size;
+	}
+
 	sge.lkey = res->mr->lkey;
 	/* prepare the send work request */
 	memset(&sr, 0, sizeof(sr));
