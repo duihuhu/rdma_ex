@@ -454,6 +454,7 @@ int com_op(struct Resource *res)
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (cfg.server_name) {
 			// strcpy(res->ib_buf, "C");
+			int i=0;
 			for (i=0; i<10000; ++i){
 				if (post_receive(res)) {
 					fprintf(stderr, "client failed to recv rr\n");
