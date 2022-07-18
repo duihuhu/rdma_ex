@@ -35,6 +35,7 @@ struct Resource {
 	struct	ibv_device_attr	dev_attr;
 	struct	ibv_port_attr	port_attr;
 	char	*ib_buf;
+	uint64_t buf;
 	int		ib_buf_size;
 	int		sockfd;
 	uint32_t	rkey;

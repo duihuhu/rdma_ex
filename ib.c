@@ -235,10 +235,15 @@ int init_ib(struct Resource *res)
 		fprintf(stdout, "alloc buffer failed\n");
 		goto init_ib_exit;
 	}
-	memset(res->ib_buf, 0, res->ib_buf_size);
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
-	res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
+	if (!strcmp(cfg.op_type, IB_OP_CAS)) {
+		res->buf = 0ULL;
+		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 1, mflags);
+	} else {
+		memset(res->ib_buf, 0, res->ib_buf_size);
+		res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
+	}
 	if (!res->mr) {
 		fprintf(stdout, "alloc mr failed\n");
 		goto init_ib_exit;
@@ -537,9 +542,8 @@ int com_op(struct Resource *res)
 				return -1;
 			}
 		} else {
-			memset(res->ib_buf, 0, res->ib_buf_size);
 			ck_cs_wire(res);
-			fprintf(stdout, "swap contents of server's buffer: '%s'\n", res->ib_buf);
+			fprintf(stdout, "swap contents of server's buffer: '%ld'\n", res->buf);
 		}
 	}
 	return 0;
