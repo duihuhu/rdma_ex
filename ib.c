@@ -123,7 +123,7 @@ int ex_qp_info(struct Resource *res)
 	local_info.qp_num = htonl(res->qp->qp_num);
 	local_info.rkey = htonl(res->mr->rkey);
 	if (!strcmp(cfg.op_type, IB_OP_CAS))
-		local_info.raddr = htonll((uintptr_t)&res->buf);
+		local_info.raddr = htonll((uintptr_t)res->buf);
 	else
 		local_info.raddr = htonll((uintptr_t)res->ib_buf);
 	int ret;
@@ -244,7 +244,7 @@ int init_ib(struct Resource *res)
 	int mflags = 0;
 	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
 	if (!strcmp(cfg.op_type, IB_OP_CAS)) {
-		res->buf = 0ULL;
+		*res->buf = 0ULL;
 		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 8, mflags);
 	} else {
 		memset(res->ib_buf, 0, res->ib_buf_size);
