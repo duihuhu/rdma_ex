@@ -502,7 +502,7 @@ int com_op(struct Resource *res)
 				}
 				gettimeofday(&end, NULL);
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
-				tp = (double) (cfg.msg_size) / duration;
+				tp = (double) (cfg.msg_size) * 8 / duration;
 				// fprintf(stdout, "%lf %lf \n", duration, throughtput);
 				latency = latency + duration;
 				throughtput = throughtput + tp;
