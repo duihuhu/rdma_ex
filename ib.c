@@ -471,6 +471,7 @@ int com_op(struct Resource *res)
 			memset(res->ib_buf, 'S', res->ib_buf_size);
 			ck_cs_wire(res);
 			double latency = 0.0;
+			int i;
 			for (i=0; i<10000; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
