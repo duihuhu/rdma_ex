@@ -115,7 +115,7 @@ int init_config(int argc, char *argv[])
 			cfg.op_type = strdup(optarg);
 			break;
     case 'g':
-      cfg.gid_id = strtoul(optarg, NULL, 0);
+      cfg.gid_idx = strtoul(optarg, NULL, 0);
       break;
 		default:
 			usage(argv[0]);
