@@ -258,7 +258,7 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	
-  res->cq = ibv_create_cq(res->ctx, cfg.msg_count + 1, NULL, NULL, 0);
+  res->cq = ibv_create_cq(res->ctx, rx_depth + 1, NULL, NULL, 0);
 
 	// res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
 	if (!res->cq) {
@@ -294,7 +294,7 @@ int init_ib(struct Resource *res)
 	qp_init_attr.recv_cq = res->cq;
 	qp_init_attr.qp_type = IBV_QPT_RC;
 	qp_init_attr.cap.max_send_wr = 1;
-	qp_init_attr.cap.max_recv_wr = cfg.msg_count;
+	qp_init_attr.cap.max_recv_wr = rx_depth;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
