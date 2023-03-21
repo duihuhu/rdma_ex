@@ -136,7 +136,7 @@ int ex_qp_info(struct Resource *res)
   union ibv_gid my_gid;
 
   if (cfg.gid_idx >= 0) {
-    if (ibv_query_gid(res.ctx, IB_PORT, cfg.gid_idx, &my_gid)) {
+    if (ibv_query_gid(res->ctx, IB_PORT, cfg.gid_idx, &my_gid)) {
       fprintf(stderr, "can't read sgid of index %d\n", cfg.gid_idx);
       return 1;
     }
