@@ -288,7 +288,6 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 
-  struct ibv_qp_attr attr;
 	struct ibv_qp_init_attr qp_init_attr;
 	memset(&qp_init_attr, 0, sizeof(qp_init_attr));
 	qp_init_attr.send_cq = res->cq;
