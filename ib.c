@@ -485,14 +485,14 @@ int com_op(struct Resource *res)
 		if (cfg.server_name) {
 			// strcpy(res->ib_buf, "C");
 			int i=0;
-			for (i=0; i<1000; ++i){
+			for (i=0; i<cfg.msg_count; ++i){
 				if (post_receive(res)) {
 					fprintf(stderr, "client failed to recv rr\n");
 					return -1;
 				}
 			}
 			ck_cs_wire(res);
-			for (i=0; i<1000; ++i) {
+			for (i=0; i<cfg.msg_count; ++i) {
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
@@ -505,7 +505,7 @@ int com_op(struct Resource *res)
 			ck_cs_wire(res);
 			double latency = 0.0;
 			int i;
-			for (i=0; i<1000; ++i){
+			for (i=0; i<cfg.msg_count; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
 				gettimeofday(&start, NULL);
@@ -522,8 +522,8 @@ int com_op(struct Resource *res)
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 				latency = latency + duration;
 			}
-			res->duration = latency/1000;
-			res->tp = (double) (cfg.msg_size) * 8 * 1000/latency;
+			res->duration = latency/cfg.msg_count;
+			res->tp = (double) (cfg.msg_size) * 8 * cfg.msg_count/latency;
 			// fprintf(stdout, "latency %lf %lf\n", latency/1000, (double) (cfg.msg_size) * 8 * 1000/latency);
 		}
 	} else if (!strcmp(cfg.op_type, IB_OP_RD)) {
@@ -533,7 +533,7 @@ int com_op(struct Resource *res)
 			int i;
 			double latency = 0.0;
 			// double throughtput = 0.0;
-			for (i=0; i<10000; ++i){
+			for (i=0; i<cfg.msg_count; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
 				gettimeofday(&start, NULL);
@@ -551,8 +551,8 @@ int com_op(struct Resource *res)
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 				latency = latency + duration;
 			}
-			res->duration = latency/10000;
-			res->tp = (double) (cfg.msg_size) * 8 * 10000/latency;
+			res->duration = latency/cfg.msg_count;
+			res->tp = (double) (cfg.msg_size) * 8 * cfg.msg_count/latency;
 			// fprintf(stdout, "latency %lf %lf\n", latency/10000, (double) (cfg.msg_size) * 8 * 10000/latency);
 			// fprintf(stdout, "latency %lf us\n", latency/10000);
 			// fprintf(stdout, "throughtput %lf Gb/s\n", (double) (cfg.msg_size) * 8 * 10000/latency);
@@ -570,7 +570,7 @@ int com_op(struct Resource *res)
 			// fprintf(stdout, "res buf %s\n", res->ib_buf);
 			int i;
 			double latency = 0.0;
-			for (i=0; i<10000; ++i){
+			for (i=0; i<cfg.msg_count; ++i){
 				struct timeval start, end;
 				double	duration = 0.0;
 				gettimeofday(&start, NULL);
@@ -588,8 +588,8 @@ int com_op(struct Resource *res)
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 				latency = latency + duration;
 			}
-			res->duration = latency/10000;
-			res->tp = (double) (cfg.msg_size) * 8 * 10000/latency;
+			res->duration = latency/cfg.msg_count;
+			res->tp = (double) (cfg.msg_size) * 8 * cfg.msg_count/latency;
 			// fprintf(stdout, "latency %lf %lf\n", latency/10000, (double) (cfg.msg_size) * 8 * 10000/latency);
 			// fprintf(stdout, "latency %lf us\n", latency/10000);
 			// fprintf(stdout, "throughtput %lf Gb/s\n", (double) (cfg.msg_size) * 8 * 10000/latency);

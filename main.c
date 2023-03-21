@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
 		fprintf(stdout, "re init config \n");
 		return 0;
 	}
-    res = malloc(cfg.num_threads * sizeof(struct Resource));
+  res = malloc(cfg.num_threads * sizeof(struct Resource));
     // ret = init_socket(addr_res);
 	if (ret < 0) {
 		fprintf(stdout, "init socket failed\n");
@@ -92,9 +92,10 @@ int init_config(int argc, char *argv[])
 			{.name = "num_threads", .has_arg = 1, .val = 't'},
 			{.name = "op-type", .has_arg = 1, .val = 'o'},
       {.name = "gid-idx", .has_arg = 1, .val = 'g'},
+      {.name = "msg-count", .has_arg = 1, .val = 'c'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
-		c = getopt_long(argc, argv, "p:d:s:t:o:g:", long_options, NULL);
+		c = getopt_long(argc, argv, "p:d:s:t:o:g:c:", long_options, NULL);
 		if (c == -1)
 			break;
 		switch (c)
@@ -116,6 +117,9 @@ int init_config(int argc, char *argv[])
 			break;
     case 'g':
       cfg.gid_idx = strtoul(optarg, NULL, 0);
+      break;
+    case 'c':
+      cfg.msg_count = strtoul(optarg, NULL, 0);
       break;
 		default:
 			usage(argv[0]);

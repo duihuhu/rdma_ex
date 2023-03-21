@@ -17,6 +17,7 @@ struct Config {
 	int		num_threads;
 	char	*op_type;
   int gid_idx;
+  int msg_count;
 };
 extern struct Config cfg;
 
