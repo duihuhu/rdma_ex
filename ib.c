@@ -474,9 +474,7 @@ int post_receive(struct Resource *res)
 	rr.sg_list = &sge;
 	rr.num_sge = 1;
 	/* post the Receive Request to the RQ */
-  for (int i=0; i<cfg.msg_count; ++i){
-	  rc = ibv_post_recv(res->qp, &rr, &bad_wr);
-  }
+	rc = ibv_post_recv(res->qp, &rr, &bad_wr);
 	if (rc)
 		fprintf(stderr, "failed to post RR %d\n ", rc);
 	else
@@ -488,13 +486,14 @@ int com_op(struct Resource *res)
 {
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (cfg.server_name) {
+			// strcpy(res->ib_buf, "C");
 			int i=0;
-			// for (i=0; i<cfg.msg_count; ++i){
-      if (post_receive(res)) {
-        fprintf(stderr, "client failed to recv rr\n");
-        return -1;
+			for (i=0; i<cfg.msg_count; ++i){
+				if (post_receive(res)) {
+					fprintf(stderr, "client failed to recv rr\n");
+					return -1;
 				}
-			// }
+			}
 			ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
 				if (poll_completion(res))
