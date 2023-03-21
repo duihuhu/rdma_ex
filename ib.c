@@ -263,7 +263,7 @@ int init_ib(struct Resource *res)
 		fprintf(stdout, "failed create cq\n");
 		goto init_ib_exit;
 	}
-  
+
 	res->ib_buf_size = cfg.msg_size;
 	res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
 	// res->ib_buf = (char *) malloc(res->ib_buf_size);
@@ -491,7 +491,7 @@ int com_op(struct Resource *res)
 					return -1;
 				}
 			}
-			ck_cs_wire(res);
+			// ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
 				if (poll_completion(res))
 				{
@@ -502,7 +502,7 @@ int com_op(struct Resource *res)
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
 			memset(res->ib_buf, 'S', res->ib_buf_size);
-			ck_cs_wire(res);
+			// ck_cs_wire(res);
 			double latency = 0.0;
 			int i;
 			for (i=0; i<cfg.msg_count; ++i){
