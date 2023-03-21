@@ -265,8 +265,8 @@ int init_ib(struct Resource *res)
 	}
   
 	res->ib_buf_size = cfg.msg_size;
-	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
-  res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
+	res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
+  // res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
   fprintf(stdout, "sizeof %ld", sizeof(res->ib_buf));
 	// res->ib_buf = (char *) malloc(res->ib_buf_size);
 	if (!res->ib_buf) {
@@ -292,8 +292,8 @@ int init_ib(struct Resource *res)
 	qp_init_attr.send_cq = res->cq;
 	qp_init_attr.recv_cq = res->cq;
 	qp_init_attr.qp_type = IBV_QPT_RC;
-	qp_init_attr.cap.max_send_wr = 10000;
-	qp_init_attr.cap.max_recv_wr = 10000;
+	qp_init_attr.cap.max_send_wr = 3000;
+	qp_init_attr.cap.max_recv_wr = 3000;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
