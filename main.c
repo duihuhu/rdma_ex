@@ -92,7 +92,7 @@ int init_config(int argc, char *argv[])
 			{.name = "num_threads", .has_arg = 1, .val = 't'},
 			{.name = "op-type", .has_arg = 1, .val = 'o'},
       {.name = "gid-idx", .has_arg = 1, .val = 'g'},
-      {.name = "msg-count", .has_arg = 1, .val = 'c'},
+      {.name = "iters", .has_arg = 1, .val = 'c'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
 		c = getopt_long(argc, argv, "p:d:s:t:o:g:c:", long_options, NULL);

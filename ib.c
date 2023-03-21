@@ -258,15 +258,17 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	
-	res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
+  res->cq = ibv_create_cq(res->ctx, cfg.msg_count + 1, NULL, NULL, 0);
+
+	// res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
 	if (!res->cq) {
 		fprintf(stdout, "failed create cq\n");
 		goto init_ib_exit;
 	}
   
 	res->ib_buf_size = cfg.msg_size;
-	res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
-  // res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
+	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
+  res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
 	// res->ib_buf = (char *) malloc(res->ib_buf_size);
 	if (!res->ib_buf) {
 		fprintf(stdout, "alloc buffer failed\n");
@@ -286,6 +288,7 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 
+  struct ibv_qp_attr attr;
 	struct ibv_qp_init_attr qp_init_attr;
 	memset(&qp_init_attr, 0, sizeof(qp_init_attr));
 	qp_init_attr.send_cq = res->cq;
