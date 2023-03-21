@@ -23,6 +23,7 @@ struct Config cfg = {
 	1, 	/*size */
 	1,  /*threads */
 	"SR", /* op type */
+  '1',
 };
 int init_config();
 void statics(struct Resource *res);
@@ -41,14 +42,13 @@ int main(int argc, char *argv[]){
 	if (ret < 0) {
 		fprintf(stdout, "init socket failed\n");
 	}
-    if (cfg.server_name) {
-		run_client(res);
-		statics(res);
-    } else {
-        run_server(res);
-		statics(res);
-
-    }
+  if (cfg.server_name) {
+    run_client(res);
+    statics(res);
+  } else {
+    run_server(res);
+    statics(res);
+  }
 	// ret = init_ib(res, sockfd);
 	return 0;
 }
@@ -77,6 +77,7 @@ static void usage(const char *argv0)
 	fprintf(stdout, " -s, --msg-size  (default 1 alloc msg size)\n");
 	fprintf(stdout, " -t, --num_threads (defulat 1)\n");
 	fprintf(stdout, " -o, --op-type (default type send/recv)\n");
+  fprintf(stdout, " -g, --gid-idx\n");
 }
 
 int init_config(int argc, char *argv[])
@@ -90,9 +91,10 @@ int init_config(int argc, char *argv[])
 			{.name = "msg-size", .has_arg = 1, .val = 's'},
 			{.name = "num_threads", .has_arg = 1, .val = 't'},
 			{.name = "op-type", .has_arg = 1, .val = 'o'},
+      {.name = "gid-idx", .has_arg = 1, .val = 'g'},
 			{.name = NULL, .has_arg = 0, .val = '\0'}
         };
-		c = getopt_long(argc, argv, "p:d:s:t:o:", long_options, NULL);
+		c = getopt_long(argc, argv, "p:d:s:t:o:g:", long_options, NULL);
 		if (c == -1)
 			break;
 		switch (c)
@@ -112,6 +114,9 @@ int init_config(int argc, char *argv[])
 		case 'o':
 			cfg.op_type = strdup(optarg);
 			break;
+    case 'g':
+      cfg.gid_id = strtoul(optarg, NULL, 0);
+      break;
 		default:
 			usage(argv[0]);
 			return -1;

@@ -24,6 +24,8 @@ int get_qp_info(int sockfd, struct QpInfo *qp_info)
 	qp_info->qp_num = ntohl(tmp_qp_info.qp_num);
 	qp_info->rkey = ntohl(tmp_qp_info.rkey);
 	qp_info->raddr = ntohll(tmp_qp_info.raddr);
+  memcpy(qp_info->gid, tmp_qp_info.gid, 16);
+
 	return 0;
 }
 int set_qp_info(int sockfd, struct QpInfo *qp_info)
@@ -34,6 +36,8 @@ int set_qp_info(int sockfd, struct QpInfo *qp_info)
 	tmp_qp_info.qp_num = qp_info->qp_num;
 	tmp_qp_info.rkey = qp_info->rkey;
 	tmp_qp_info.raddr = qp_info->raddr;
+  memcpy(tmp_qp_info.gid, qp_info->gid, 16);
+
 	ret = sock_write(sockfd, (char *)&tmp_qp_info, sizeof(struct QpInfo));
 	if (ret < 0) {
 		fprintf(stdout, "sock write failed\n");
@@ -43,7 +47,7 @@ int set_qp_info(int sockfd, struct QpInfo *qp_info)
 }
 
 
-int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid)
+int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint16_t lid, uint8_t *dgid)
 {
 	{
 		struct ibv_qp_attr attr = {
@@ -73,6 +77,17 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 			.ah_attr.src_path_bits = 0,
 			.ah_attr.port_num = IB_PORT,
 		};
+
+    if (cfg.gid_idx >= 0){
+      attr.ah_attr.is_global = 1;
+      attr.ah_attr.port_num = 1;
+      memcpy(&attr.ah_attr.grh.dgid, dgid, 16);
+      attr.ah_attr.grh.flow_label = 0;
+      attr.ah_attr.grh.hop_limit = 1;
+      attr.ah_attr.grh.sgid_index = cfg.gid_idx;
+      attr.ah_attr.grh.traffic_class = 0;
+   }
+
 		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_PATH_MTU | IBV_QP_DEST_QPN | IBV_QP_RQ_PSN | IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER | IBV_QP_AV)) {
 			fprintf(stdout, "failed to convert to RTR");
 			return -1;
@@ -118,10 +133,25 @@ int ex_qp_info(struct Resource *res)
 {
 	struct QpInfo local_info;
 	struct QpInfo remote_info;
+  union ibv_gid my_gid;
+
+  if (cfg.gid_idx >= 0) {
+    if (ibv_query_gid(res.ctx, IB_PORT, cfg.gid_idx, &my_gid)) {
+      fprintf(stderr, "can't read sgid of index %d\n", cfg.gid_idx);
+      return 1;
+    }
+  } else
+    memset(&my_gid, 0, sizeof my_gid);
+  
+  char	gid[33];
+  inet_ntop(AF_INET6, &my_gid, gid, sizeof gid);
+
 	memset(&remote_info, 0, sizeof(struct QpInfo));
 	local_info.lid = htons(res->port_attr.lid);
 	local_info.qp_num = htonl(res->qp->qp_num);
 	local_info.rkey = htonl(res->mr->rkey);
+  memcpy(local_info.gid, &my_gid, 16);
+
 	if (!strcmp(cfg.op_type, IB_OP_CAS))
 		local_info.raddr = htonll((uintptr_t)&res->buf);
 	else
@@ -159,7 +189,7 @@ int ex_qp_info(struct Resource *res)
 	else
 		fprintf(stdout, "local key 0x%x, local addr %p, remote key 0x%x, remote addr 0x%lx\n", res->mr->rkey, res->ib_buf, res->rkey, res->raddr);
 	
-	ret = conv_qp_status(res, res->qp, remote_info.qp_num, remote_info.lid);
+	ret = conv_qp_status(res, res->qp, remote_info.qp_num, remote_info.lid, remote_info.gid);
 	if (ret < 0) {
 		fprintf(stdout, "failed to convert qp status \n");
 		return -1;
