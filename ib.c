@@ -99,8 +99,8 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 			.qp_state = IBV_QPS_RTS,
 			.sq_psn = 0,
 			.timeout = 14,
-			.retry_cnt = 14,
-			.rnr_retry = 14,
+			.retry_cnt = 7,
+			.rnr_retry = 7,
 			.max_rd_atomic = 1, 
 		};
 		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_SQ_PSN | IBV_QP_TIMEOUT | IBV_QP_RETRY_CNT | IBV_QP_RNR_RETRY | IBV_QP_MAX_QP_RD_ATOMIC)) {
@@ -270,6 +270,8 @@ int init_ib(struct Resource *res)
 	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
   // res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
 	res->ib_buf = (char *) malloc(res->ib_buf_size);
+	memset(res->ib_buf, 0, res->ib_buf_size);
+  
 	if (!res->ib_buf) {
 		fprintf(stdout, "alloc buffer failed\n");
 		goto init_ib_exit;
