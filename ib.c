@@ -344,9 +344,7 @@ int poll_completion(struct Resource *res)
 	start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	do
 	{
-    printf("poll_completion \n");
 		poll_result = ibv_poll_cq(res->cq, 1, &wc);
-    printf("poll_result %d\n", poll_result);
 		// gettimeofday(&cur_time, NULL);
 		cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	} while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
@@ -370,7 +368,9 @@ int poll_completion(struct Resource *res)
 		/* check the completion status (here we don't care about the completion opcode */
 		if (wc.status != IBV_WC_SUCCESS)
 		{
-			fprintf(stderr, "got bad completion with status: 0x%x, vendor syndrome: 0x%x\n", wc.status,
+			// fprintf(stderr, "got bad completion with status: 0x%x, vendor syndrome: 0x%x\n", wc.status,
+			// 		wc.vendor_err);
+      fprintf(stderr, "got bad completion with status: %s , 0x%x, vendor syndrome: 0x%x\n", ibv_wc_status_str(status), wc.status,
 					wc.vendor_err);
 			rc = 1;
 		}
