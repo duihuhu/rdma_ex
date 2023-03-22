@@ -275,7 +275,7 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	int mflags = 0;
-	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
+	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE ;
 	if (!strcmp(cfg.op_type, IB_OP_CAS)) {
 		res->buf = 0ULL;
 		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 8, mflags);
