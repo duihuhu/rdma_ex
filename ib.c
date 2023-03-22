@@ -370,7 +370,7 @@ int poll_completion(struct Resource *res)
 		{
 			// fprintf(stderr, "got bad completion with status: 0x%x, vendor syndrome: 0x%x\n", wc.status,
 			// 		wc.vendor_err);
-      fprintf(stderr, "got bad completion with status: %s , 0x%x, vendor syndrome: 0x%x\n", ibv_wc_status_str(status), wc.status,
+      fprintf(stderr, "got bad completion with status: %s , 0x%x, vendor syndrome: 0x%x\n", ibv_wc_status_str(wc.status), wc.status,
 					wc.vendor_err);
 			rc = 1;
 		}
