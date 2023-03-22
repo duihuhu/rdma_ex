@@ -420,7 +420,7 @@ int post_send(struct Resource *res, int opcode)
 	sr.sg_list = &sge;
 	sr.num_sge = 1;
 	sr.opcode = opcode;
-	sr.send_flags = IBV_SEND_SIGNALED | IBV_SEND_INLINE;
+	sr.send_flags = IBV_SEND_SIGNALED;
   // ibv_query_qp(res->qp, &attr, IBV_QP_CAP, &init_attr);
   // if (init_attr.cap.max_inline_data >= ib_buf_size)
   //   sr.send_flags |= IBV_SEND_INLINE;
