@@ -258,7 +258,7 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	
-  res->cq = ibv_create_cq(res->ctx, rx_depth + 1, NULL, NULL, 0);
+  res->cq = ibv_create_cq(res->ctx, cfg.msg_count, NULL, NULL, 0);
 
 	// res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
 	if (!res->cq) {
