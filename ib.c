@@ -98,7 +98,7 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 		struct ibv_qp_attr attr = {
 			.qp_state = IBV_QPS_RTS,
 			.sq_psn = 0,
-			.timeout = 0x12,
+			.timeout = 14,
 			.retry_cnt = 7,
 			.rnr_retry = 7,
 			.max_rd_atomic = 1, 
@@ -498,7 +498,7 @@ int com_op(struct Resource *res)
 					return -1;
 				}
 			}
-			ck_cs_wire(res);
+			// ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
 				if (poll_completion(res))
 				{
@@ -513,7 +513,7 @@ int com_op(struct Resource *res)
         printf("%c", res->ib_buf[i]);
       }
       printf("\n");
-			ck_cs_wire(res);
+			// ck_cs_wire(res);
 			double latency = 0.0;
 			int i;
 			for (i=0; i<cfg.msg_count; ++i){
