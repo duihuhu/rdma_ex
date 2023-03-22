@@ -98,7 +98,7 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 		struct ibv_qp_attr attr = {
 			.qp_state = IBV_QPS_RTS,
 			.sq_psn = 0,
-			.timeout = 14,
+			.timeout = 0x12,
 			.retry_cnt = 7,
 			.rnr_retry = 7,
 			.max_rd_atomic = 1, 
