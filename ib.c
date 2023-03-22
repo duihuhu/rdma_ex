@@ -525,11 +525,15 @@ int com_op(struct Resource *res)
 					fprintf(stderr,  "server failed to post sr\n");
 					return -1;
 				}
+        printf("send: %d\n", i);
+
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
 					return -1;
 				}
+        printf("poll_completion: %d\n", i);
+
 				gettimeofday(&end, NULL);
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
 				latency = latency + duration;
