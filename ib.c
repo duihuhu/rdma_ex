@@ -500,6 +500,8 @@ int com_op(struct Resource *res)
 					return -1;
 				}
 			}
+      fprintf(stdout, "client send end\n");
+
 			ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
 				if (poll_completion(res))
@@ -508,6 +510,8 @@ int com_op(struct Resource *res)
 					return -1;
 				}
 			}
+      fprintf(stdout, "client poll end\n");
+
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
 			memset(res->ib_buf, 'S', res->ib_buf_size);
