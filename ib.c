@@ -258,7 +258,7 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	
-  res->cq = ibv_create_cq(res->ctx, rx_depth + 1, NULL, NULL, 0);
+  res->cq = ibv_create_cq(res->ctx, cfg.msg_count + 1, NULL, NULL, 0);
 
 	// res->cq = ibv_create_cq(res->ctx, res->dev_attr.max_cqe, NULL, NULL, 0);
 	if (!res->cq) {
@@ -498,7 +498,7 @@ int com_op(struct Resource *res)
 					return -1;
 				}
 			}
-			// ck_cs_wire(res);
+			ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
 				if (poll_completion(res))
 				{
@@ -513,7 +513,7 @@ int com_op(struct Resource *res)
         printf("%c", res->ib_buf[i]);
       }
       printf("\n");
-			// ck_cs_wire(res);
+			ck_cs_wire(res);
 			double latency = 0.0;
 			int i;
 			for (i=0; i<cfg.msg_count; ++i){
