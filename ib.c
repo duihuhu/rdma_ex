@@ -493,8 +493,9 @@ int com_op(struct Resource *res)
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (cfg.server_name) {
 			// strcpy(res->ib_buf, "C");
-			int i=0;
+			int i;
 			for (i=0; i<cfg.msg_count; ++i){
+        printf("post_receive i: %d\n", i);
 				if (post_receive(res)) {
 					fprintf(stderr, "client failed to recv rr\n");
 					return -1;
@@ -504,13 +505,13 @@ int com_op(struct Resource *res)
 
 			ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
+        printf("poll_completion i: %d\n", i);
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
 					return -1;
 				}
 			}
-      ck_cs_wire(res);
       fprintf(stdout, "client poll end\n");
 
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
