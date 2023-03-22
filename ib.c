@@ -125,7 +125,7 @@ int ck_cs_wire(struct Resource *res) {
 		fprintf(stdout, "failed to read sync\n");
 		return -1;
 	}
-	fprintf(stdout, "%s sock_read ck_cs_wire\n", buf);
+	// fprintf(stdout, "%s sock_read ck_cs_wire\n", buf);
 	return 0;
 }
 
@@ -488,31 +488,30 @@ int post_receive(struct Resource *res)
 	return rc;
 }
 
-int com_op(struct Resource *res)
+int com_op(struct Resource *res, int thread_id)
 {
 	if (!strcmp(cfg.op_type, IB_OP_SR)) {
 		if (cfg.server_name) {
 			// strcpy(res->ib_buf, "C");
 			int i;
 			for (i=0; i<cfg.msg_count; ++i){
-        printf("post_receive i: %d\n", i);
+        printf("client post_receive i: %d, thread_id %d\n", i, thread_id);
 				if (post_receive(res)) {
 					fprintf(stderr, "client failed to recv rr\n");
 					return -1;
 				}
 			}
-      fprintf(stdout, "client send end\n");
-
+      fprintf(stdout, "client post receive end thread_id %d \n", thread_id);
 			ck_cs_wire(res);
 			for (i=0; i<cfg.msg_count; ++i) {
-        printf("poll_completion i: %d\n", i);
+        printf("client poll_completion i: %d, thread_id %d\n", i, thread_id);
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
 					return -1;
 				}
 			}
-      fprintf(stdout, "client poll end\n");
+      fprintf(stdout, "client poll end thread_id %d\n", thread_id);
 
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
@@ -528,14 +527,14 @@ int com_op(struct Resource *res)
 					fprintf(stderr,  "server failed to post sr\n");
 					return -1;
 				}
-        printf("send: %d\n", i);
+        printf("server post send : %d, thread_id %d\n", i, thread_id);
 
 				if (poll_completion(res))
 				{
 					fprintf(stderr, "poll completion failed\n");
 					return -1;
 				}
-        printf("poll_completion: %d\n", i);
+        printf("server poll_completion: %d, thread_id %d\n", i, thread_id);
 
 				gettimeofday(&end, NULL);
 				duration = (double) ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);

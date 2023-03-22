@@ -18,7 +18,7 @@ void *server_func(void *mul_args){
       return (void*)-1;
   }
   
-  ret = com_op(args->res);
+  ret = com_op(args->res, args->thread_id);
   if (ret < 0) {
       fprintf(stderr, "communicate operation failed\n");
       return (void*)-1;
@@ -85,23 +85,23 @@ int run_server (struct Resource *res)
 
   while (1) {
     listenfd[i] = accept(sockfd, (struct sockaddr*)&c_addr, &c_addr_len);
-  if (listenfd[i] < 0) {
-    fprintf( stdout, "accept failed\n");
-    return -1;
-  }
+    if (listenfd[i] < 0) {
+      fprintf( stdout, "accept failed\n");
+      return -1;
+    }
       res[i].sockfd = listenfd[i];
       mul_args[i].sockfd = listenfd[i];
       mul_args[i].res = &res[i];
       mul_args[i].thread_id = i;
       if((pthread_create(&threads[i], &attr, server_func, (void *)&mul_args[i])) == -1){
-    printf("create error!\n");
-  }
-  else{
-    printf("create success!\n");
-    i++;
-  }
-      if (i >= cfg.num_threads)
-          break;
+      printf("create error!\n");
+    }
+    else{
+      printf("create success!\n");
+      i++;
+    }
+    if (i >= cfg.num_threads)
+        break;
   }
   bool thread_ret_normally = true;
   for (i = 0; i < cfg.num_threads; i++) {
