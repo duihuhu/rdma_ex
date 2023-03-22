@@ -405,7 +405,7 @@ int post_send(struct Resource *res, int opcode)
 	} else {
 		sge.addr = (uintptr_t)res->ib_buf;
 		sge.length = res->ib_buf_size;
-    fprintf(stdout, "sge length %d\n", sge.length);
+    fprintf(stdout, "post_send sge length %d\n", sge.length);
 	}
 
 	sge.lkey = res->mr->lkey;
@@ -481,6 +481,8 @@ int post_receive(struct Resource *res)
 	rr.wr_id = RECV_WRID;
 	rr.sg_list = &sge;
 	rr.num_sge = 1;
+  fprintf(stdout, "post_receive sge length %d\n", sge.length);
+
 	/* post the Receive Request to the RQ */
 	rc = ibv_post_recv(res->qp, &rr, &bad_wr);
 	if (rc)
