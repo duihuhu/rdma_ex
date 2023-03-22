@@ -510,15 +510,11 @@ int com_op(struct Resource *res)
 					return -1;
 				}
 			}
+      ck_cs_wire(res);
       fprintf(stdout, "client poll end\n");
 
 			// fprintf(stdout, "Server Message is: '%s'\n", res->ib_buf);
 		} else {
-			memset(res->ib_buf, 'S', res->ib_buf_size);
-      for (int i = 0; i<res->ib_buf_size; ++i) {
-        printf("%c", res->ib_buf[i]);
-      }
-      printf("\n");
 			ck_cs_wire(res);
 			double latency = 0.0;
 			int i;
