@@ -334,21 +334,19 @@ init_ib_exit:
 int poll_completion(struct Resource *res)
 {
 	struct ibv_wc wc;
-	// unsigned long start_time_msec;
-	// unsigned long cur_time_msec;
-	// struct timeval cur_time;
+
 	int poll_result;
 	int rc = 0;
 	/* poll the completion for a while before giving up of doing it .. */
-	// gettimeofday(&cur_time, NULL);
-	// start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
+	gettimeofday(&cur_time, NULL);
+	start_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
 	do
 	{
 		poll_result = ibv_poll_cq(res->cq, 1, &wc);
-		// gettimeofday(&cur_time, NULL);
-		// cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
-	// } while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
-	} while (poll_result == 0);
+		gettimeofday(&cur_time, NULL);
+		cur_time_msec = (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
+	} while ((poll_result == 0) && ((cur_time_msec - start_time_msec) < MAX_POLL_CQ_TIMEOUT));
+	// } while (poll_result == 0);
 
 	if (poll_result < 0)
 	{
