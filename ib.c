@@ -405,6 +405,7 @@ int post_send(struct Resource *res, int opcode)
 	} else {
 		sge.addr = (uintptr_t)res->ib_buf;
 		sge.length = res->ib_buf_size;
+    fprintf("sge length %d\n", sge.length);
 	}
 
 	sge.lkey = res->mr->lkey;
