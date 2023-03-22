@@ -293,7 +293,7 @@ int init_ib(struct Resource *res)
 	qp_init_attr.send_cq = res->cq;
 	qp_init_attr.recv_cq = res->cq;
 	qp_init_attr.qp_type = IBV_QPT_RC;
-	qp_init_attr.cap.max_send_wr = cfg.msg_count;
+	qp_init_attr.cap.max_send_wr = 1;
 	qp_init_attr.cap.max_recv_wr = cfg.msg_count;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
