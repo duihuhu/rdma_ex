@@ -80,12 +80,12 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 
     if (cfg.gid_idx >= 0){
       attr.ah_attr.is_global = 1;
-      attr.ah_attr.port_num = 1;
+      // attr.ah_attr.port_num = 1;
       memcpy(&attr.ah_attr.grh.dgid, dgid, 16);
-      attr.ah_attr.grh.flow_label = 0;
+      // attr.ah_attr.grh.flow_label = 0;
       attr.ah_attr.grh.hop_limit = 1;
       attr.ah_attr.grh.sgid_index = cfg.gid_idx;
-      attr.ah_attr.grh.traffic_class = 0;
+      // attr.ah_attr.grh.traffic_class = 0;
    }
 
 		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_PATH_MTU | IBV_QP_DEST_QPN | IBV_QP_RQ_PSN | IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER | IBV_QP_AV)) {
