@@ -294,7 +294,7 @@ int init_ib(struct Resource *res)
 	qp_init_attr.recv_cq = res->cq;
 	qp_init_attr.qp_type = IBV_QPT_RC;
 	qp_init_attr.cap.max_send_wr = 1;
-	qp_init_attr.cap.max_recv_wr = rx_depth + 1;
+	qp_init_attr.cap.max_recv_wr = rx_depth;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
@@ -413,6 +413,11 @@ int post_send(struct Resource *res, int opcode)
 	sr.num_sge = 1;
 	sr.opcode = opcode;
 	sr.send_flags = IBV_SEND_SIGNALED;
+  sr.send_flags |= IBV_SEND_INLINE;
+  // ibv_query_qp(res->qp, &attr, IBV_QP_CAP, &init_attr);
+  // if (init_attr.cap.max_inline_data >= ib_buf_size)
+  //   sr.send_flags |= IBV_SEND_INLINE;
+
 	if (opcode != IBV_WR_SEND)
 	{
 		sr.wr.rdma.remote_addr = res->raddr;
