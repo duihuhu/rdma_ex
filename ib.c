@@ -99,8 +99,8 @@ int conv_qp_status(struct Resource *res,struct ibv_qp *qp, uint32_t qp_num ,uint
 			.qp_state = IBV_QPS_RTS,
 			.sq_psn = 0,
 			.timeout = 14,
-			.retry_cnt = 7,
-			.rnr_retry = 7,
+			.retry_cnt = 14,
+			.rnr_retry = 14，
 			.max_rd_atomic = 1, 
 		};
 		if (ibv_modify_qp(res->qp, &attr, IBV_QP_STATE | IBV_QP_SQ_PSN | IBV_QP_TIMEOUT | IBV_QP_RETRY_CNT | IBV_QP_RNR_RETRY | IBV_QP_MAX_QP_RD_ATOMIC)) {
@@ -275,7 +275,7 @@ int init_ib(struct Resource *res)
 		goto init_ib_exit;
 	}
 	int mflags = 0;
-	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE ;
+	mflags = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ | IBV_ACCESS_REMOTE_WRITE | IBV_ACCESS_REMOTE_ATOMIC;
 	if (!strcmp(cfg.op_type, IB_OP_CAS)) {
 		res->buf = 0ULL;
 		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 8, mflags);
