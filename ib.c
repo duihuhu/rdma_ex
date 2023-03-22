@@ -294,7 +294,7 @@ int init_ib(struct Resource *res)
 	qp_init_attr.recv_cq = res->cq;
 	qp_init_attr.qp_type = IBV_QPT_RC;
 	qp_init_attr.cap.max_send_wr = 1;
-	qp_init_attr.cap.max_recv_wr = cfg.msg_count;
+	qp_init_attr.cap.max_recv_wr = rx_depth + 1;
 	qp_init_attr.cap.max_send_sge = 1;
 	qp_init_attr.cap.max_recv_sge = 1;
 	res->qp = ibv_create_qp(res->pd, &qp_init_attr);
@@ -408,7 +408,7 @@ int post_send(struct Resource *res, int opcode)
 	/* prepare the send work request */
 	memset(&sr, 0, sizeof(sr));
 	sr.next = NULL;
-	sr.wr_id = 0;
+	sr.wr_id = SEND_WRID;
 	sr.sg_list = &sge;
 	sr.num_sge = 1;
 	sr.opcode = opcode;
@@ -470,7 +470,7 @@ int post_receive(struct Resource *res)
 	/* prepare the receive work request */
 	memset(&rr, 0, sizeof(rr));
 	rr.next = NULL;
-	rr.wr_id = 0;
+	rr.wr_id = RECV_WRID;
 	rr.sg_list = &sge;
 	rr.num_sge = 1;
 	/* post the Receive Request to the RQ */

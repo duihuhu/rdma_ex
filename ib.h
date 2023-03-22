@@ -19,6 +19,13 @@
 #define IB_OP_WI	"IWRITE"
 #define IB_OP_CAS	"CAS"
 #define rx_depth 500
+
+enum {
+	RECV_WRID = 1,
+	SEND_WRID = 2,
+};
+
+
 struct QpInfo {
 	uint16_t lid;
 	uint32_t qp_num;
