@@ -110,7 +110,7 @@ int run_server (struct Resource *res)
           fprintf(stderr, "Failed to join thread[%ld].", i);
       if ((long)status != 0) {
           thread_ret_normally = false;
-          fprintf(stdout, "client_thread[%ld]: failed to execute", i);
+          fprintf(stdout, "server_thread[%ld]: failed to execute", i);
       }
       close(listenfd[i]);
   }
