@@ -440,7 +440,7 @@ int post_send(struct Resource *res, int opcode)
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
 	if (rc)
-		fprintf(stderr, "failed to post SR\n");
+		fprintf(stderr, "failed to post SR %d\n", rc);
 	// else
 	// {
 	// 	switch (opcode)
