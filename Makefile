@@ -2,8 +2,8 @@ CC=gcc
 CFLAGS=-Wall -Werror -O2 -g
 INCLUDES=
 LDFLAGS=-libverbs
-LIBS=-pthread -lrdmacm
-
+# LIBS=-pthread -lrdmacm
+LIBS=-pthread
 SRCS=main.c ib.c sock.c server.c client.c
 OBJS=$(SRCS:.c=.o)
 PROG=rdma-init
