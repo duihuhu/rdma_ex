@@ -517,6 +517,7 @@ int com_op(struct Resource *res)
 			double latency = 0.0;
 			int i;
 			for (i=0; i<cfg.msg_count; ++i){
+        printf("i: %d\n", i);
 				struct timeval start, end;
 				double	duration = 0.0;
 				gettimeofday(&start, NULL);
