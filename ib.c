@@ -269,9 +269,7 @@ int init_ib(struct Resource *res)
 	res->ib_buf_size = cfg.msg_size;
 	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
   // res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
-	res->ib_buf = (char *) malloc(res->ib_buf_size);
-	memset(res->ib_buf, 0, res->ib_buf_size);
-  
+	res->ib_buf = (char *) malloc(res->ib_buf_size);  
 	if (!res->ib_buf) {
 		fprintf(stdout, "alloc buffer failed\n");
 		goto init_ib_exit;
@@ -437,8 +435,8 @@ int post_send(struct Resource *res, int opcode)
 
 	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
 	rc = ibv_post_send(res->qp, &sr, &bad_wr);
-	// if (rc)
-	// 	fprintf(stderr, "failed to post SR\n");
+	if (rc)
+		fprintf(stderr, "failed to post SR\n");
 	// else
 	// {
 	// 	switch (opcode)
