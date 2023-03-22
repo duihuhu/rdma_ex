@@ -268,8 +268,8 @@ int init_ib(struct Resource *res)
   
 	res->ib_buf_size = cfg.msg_size;
 	// res->ib_buf = (char *) memalign(PAGE_SIZE, res->ib_buf_size);
-  res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
-	// res->ib_buf = (char *) malloc(res->ib_buf_size);
+  // res->ib_buf = memalign(PAGE_SIZE, res->ib_buf_size);
+	res->ib_buf = (char *) malloc(res->ib_buf_size);
 	if (!res->ib_buf) {
 		fprintf(stdout, "alloc buffer failed\n");
 		goto init_ib_exit;
