@@ -396,75 +396,95 @@ int poll_completion(struct Resource *res)
 
 int post_send(struct Resource *res, int opcode)
 {
-	struct ibv_send_wr sr;
-	struct ibv_sge sge;
-	struct ibv_send_wr *bad_wr = NULL;
-	int rc;
-	/* prepare the scatter/gather entry */
-	memset(&sge, 0, sizeof(sge));
-	if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP)
-	{
-		sge.addr = (uintptr_t)&res->buf;
-		sge.length = 8;
-	} else {
-		sge.addr = (uintptr_t)res->ib_buf;
-		sge.length = res->ib_buf_size;
-    fprintf(stdout, "post_send sge length %d\n", sge.length);
-	}
 
-	sge.lkey = res->mr->lkey;
-	/* prepare the send work request */
-	memset(&sr, 0, sizeof(sr));
-	sr.next = NULL;
-	sr.wr_id = SEND_WRID;
-	sr.sg_list = &sge;
-	sr.num_sge = 1;
-	sr.opcode = opcode;
-	sr.send_flags = IBV_SEND_SIGNALED;
-  // ibv_query_qp(res->qp, &attr, IBV_QP_CAP, &init_attr);
-  // if (init_attr.cap.max_inline_data >= ib_buf_size)
-  //   sr.send_flags |= IBV_SEND_INLINE;
+	struct ibv_sge list = {
+		.addr	= (uintptr_t) res->ib_buf,
+		.length = res->ib_buf_size,
+		.lkey	= res->mr->lkey
+	};
+	struct ibv_send_wr wr = {
+		.wr_id	    = SEND_WRID,
+		.sg_list    = &list,
+		.num_sge    = 1,
+		.opcode     = IBV_WR_SEND,
+		.send_flags = IBV_SEND_SIGNALED,
+	};
+	struct ibv_send_wr *bad_wr;
 
-	if (opcode != IBV_WR_SEND)
-	{
-		sr.wr.rdma.remote_addr = res->raddr;
-		sr.wr.rdma.rkey = res->rkey;
-		if (opcode == IBV_WR_RDMA_WRITE_WITH_IMM) 
-			sr.imm_data   = htonl(0x1234);
-		if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP) {
-			sr.wr.atomic.compare_add = 0ULL; /* expected value in remote address */
-			sr.wr.atomic.swap        = 1ULL; /* the value that remote address will be assigned to */
-		}
-	}
+  return ibv_post_send(res->qp, &wr, &bad_wr);
 
-	/* there is a Receive Request in the responder side, so we won't get any into RNR flow */
-	rc = ibv_post_send(res->qp, &sr, &bad_wr);
-	if (rc)
-		fprintf(stderr, "failed to post SR\n");
-	// else
+
+
+
+	// struct ibv_send_wr sr;
+	// struct ibv_sge sge;
+	// struct ibv_send_wr *bad_wr = NULL;
+	// int rc;
+	// /* prepare the scatter/gather entry */
+	// memset(&sge, 0, sizeof(sge));
+	// if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP)
 	// {
-	// 	switch (opcode)
-	// 	{
-	// 	case IBV_WR_SEND:
-	// 		fprintf(stdout, "Send Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_RDMA_READ:
-	// 		fprintf(stdout, "RDMA Read Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_RDMA_WRITE:
-	// 		fprintf(stdout, "RDMA Write Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_RDMA_WRITE_WITH_IMM:
-	// 		fprintf(stdout, "RDMA IM Write Request was posted\n");
-	// 		break;
-	// 	case IBV_WR_ATOMIC_CMP_AND_SWP:
-	// 		fprintf(stdout, "RDMA CAS Request was posted\n");
-	// 		break;
-	// 	default:
-	// 		fprintf(stdout, "Unknown Request was posted\n");
-	// 		break;
+	// 	sge.addr = (uintptr_t)&res->buf;
+	// 	sge.length = 8;
+	// } else {
+	// 	sge.addr = (uintptr_t)res->ib_buf;
+	// 	sge.length = res->ib_buf_size;
+  //   fprintf(stdout, "post_send sge length %d\n", sge.length);
+	// }
+
+	// sge.lkey = res->mr->lkey;
+	// /* prepare the send work request */
+	// memset(&sr, 0, sizeof(sr));
+	// sr.next = NULL;
+	// sr.wr_id = SEND_WRID;
+	// sr.sg_list = &sge;
+	// sr.num_sge = 1;
+	// sr.opcode = opcode;
+	// sr.send_flags = IBV_SEND_SIGNALED;
+  // // ibv_query_qp(res->qp, &attr, IBV_QP_CAP, &init_attr);
+  // // if (init_attr.cap.max_inline_data >= ib_buf_size)
+  // //   sr.send_flags |= IBV_SEND_INLINE;
+
+	// if (opcode != IBV_WR_SEND)
+	// {
+	// 	sr.wr.rdma.remote_addr = res->raddr;
+	// 	sr.wr.rdma.rkey = res->rkey;
+	// 	if (opcode == IBV_WR_RDMA_WRITE_WITH_IMM) 
+	// 		sr.imm_data   = htonl(0x1234);
+	// 	if (opcode == IBV_WR_ATOMIC_CMP_AND_SWP) {
+	// 		sr.wr.atomic.compare_add = 0ULL; /* expected value in remote address */
+	// 		sr.wr.atomic.swap        = 1ULL; /* the value that remote address will be assigned to */
 	// 	}
 	// }
+
+	// /* there is a Receive Request in the responder side, so we won't get any into RNR flow */
+	// rc = ibv_post_send(res->qp, &sr, &bad_wr);
+	// if (rc)
+	// 	fprintf(stderr, "failed to post SR\n");
+	// // else
+	// // {
+	// // 	switch (opcode)
+	// // 	{
+	// // 	case IBV_WR_SEND:
+	// // 		fprintf(stdout, "Send Request was posted\n");
+	// // 		break;
+	// // 	case IBV_WR_RDMA_READ:
+	// // 		fprintf(stdout, "RDMA Read Request was posted\n");
+	// // 		break;
+	// // 	case IBV_WR_RDMA_WRITE:
+	// // 		fprintf(stdout, "RDMA Write Request was posted\n");
+	// // 		break;
+	// // 	case IBV_WR_RDMA_WRITE_WITH_IMM:
+	// // 		fprintf(stdout, "RDMA IM Write Request was posted\n");
+	// // 		break;
+	// // 	case IBV_WR_ATOMIC_CMP_AND_SWP:
+	// // 		fprintf(stdout, "RDMA CAS Request was posted\n");
+	// // 		break;
+	// // 	default:
+	// // 		fprintf(stdout, "Unknown Request was posted\n");
+	// // 		break;
+	// // 	}
+	// // }
 	return rc;
 }
 
