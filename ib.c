@@ -125,7 +125,7 @@ int ck_cs_wire(struct Resource *res) {
 		fprintf(stdout, "failed to read sync\n");
 		return -1;
 	}
-	fprintf(stdout, "%s ck_cs_wire\n", buf);
+	fprintf(stdout, "%s sock_read ck_cs_wire\n", buf);
 	return 0;
 }
 
