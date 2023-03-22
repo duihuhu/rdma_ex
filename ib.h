@@ -60,5 +60,5 @@ int ck_cs_wire(struct Resource *res);
 int post_send(struct Resource *res, int opcode);
 int post_receive(struct Resource *res);
 int poll_completion(struct Resource *res);
-int com_op(struct Resource *res);
+int com_op(struct Resource *res, int thread_id);
 #endif /*ib.h*/
