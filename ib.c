@@ -510,7 +510,7 @@ int com_op(struct Resource *res)
 		} else {
 			memset(res->ib_buf, 'S', res->ib_buf_size);
       for (int i = 0; i<res->ib_buf_size; ++i) {
-        printf("res buff %c", res->ib_buf[i]);
+        printf("%c", res->ib_buf[i]);
       }
       printf("\n");
 			ck_cs_wire(res);
