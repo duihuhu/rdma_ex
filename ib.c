@@ -485,7 +485,7 @@ int post_send(struct Resource *res, int opcode)
 	// // 		break;
 	// // 	}
 	// // }
-	return rc;
+	// return rc;
 }
 
 int post_receive(struct Resource *res)
