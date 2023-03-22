@@ -280,7 +280,7 @@ int init_ib(struct Resource *res)
 		res->buf = 0ULL;
 		res->mr = ibv_reg_mr(res->pd, (void *)&res->buf, 8, mflags);
 	} else {
-    fprintf("ibv_reg_mr");
+    fprintf(stdout, "ibv_reg_mr\n");
 		memset(res->ib_buf, 0, res->ib_buf_size);
 		res->mr = ibv_reg_mr(res->pd, (void *)res->ib_buf, res->ib_buf_size, mflags);
 	}
